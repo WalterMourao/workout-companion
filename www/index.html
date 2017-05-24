@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/jquery.mobile.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="cordova.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.mobile.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/index.js"></script>
+</head>
+<body>
+    <div id="divMainPage" data-role="page" data-theme="a">
+        <div data-role="header">
+            <!-- 
+            <a href="#popupMenu" data-rel="popup" data-transition="pop" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-bars">Menu</a>
+            <div data-role="popup" id="popupMenu">
+                <ul data-role="listview" data-inset="true" style="min-width: 210px;">
+                    <li><a href="ReceberPorEmail.html">Receber por e-mail</a></li>
+                    <li><a href="ComoPesquisar.html">Como pesquisar</a></li>
+                    <li><a href="PrecisoDeAjuda.html">Preciso de ajuda</a></li>
+                </ul>
+            </div>
+            --->
+            <h1>Workout Companion</h1>
+        </div>
+        <div data-role="header">
+            <div class="ui-field-contain ui-corner-all">
+                <form id="frmRoutines" onsubmit="return false;" class="ui-grid-b home-breakpoint">
+                    <div id="divRoutines" class="ui-block-a">
+                        <select name="slctRoutines" id="slctRoutines" onchange="showItems(); return true;" style="width: 100%">
+                            <option value="-1">Nenhum treino foi criado</option>
+                        </select>
+                    </div>
+                    <div id="divEditRoutines" class="ui-block-b">
+                        <a id="aEditRoutine" onclick="editRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-edit" style="display: none">Edit Routine</a>
+                    </div>
+                    <div id="divNewRoutines" class="ui-block-c">
+                        <a onclick="newRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus">New Routine</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="divContent" data-role="content">
+            <a id="aNewItem" onclick="newItem(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus" style="display: none">Novo item</a>
+            <ul id="itemsContainer" data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b"></ul>
+        </div>
+    </div>
+    <div id="divEditRoutinePage" data-role="page" data-theme="a">
+        <div data-role="header">
+            <a href="#divMainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
+            <h1>Edit Routine</h1>
+            <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditRoutine').submit(); return false;">Confirmar</a>
+        </div>
+
+        <div id="divEditRoutineContent" data-role="content">
+            <form id="frmEditRoutine">
+                <input type="hidden" id="routineId" />
+                <div data-role="content">
+                    <div data-role="fieldcontainer">
+                        <label for="inputName" >Treino:</label> <input type="text" id="inputName" name="inputName"  placeholder="Nome do Treino" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div data-role="footer"></div>
+    </div>
+    <div id="divEditItemPage" data-role="page" data-theme="a">
+        <div data-role="header">
+            <a href="#divMainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
+            <h1>Edit Item</h1>
+            <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditItem').submit(); return false;">Confirmar</a>
+        </div>
+        <div id="divEditItemContent" data-role="content">
+            <form id="frmEditItem">
+                <input type="hidden" id="itemId" />
+                <div data-role="content">
+                    <div data-role="fieldcontainer">
+                        <label for="inputExercise" >Exercício:</label> <input type="text" id="inputExercise" name="inputExercise"  placeholder="Descrição do Exercício" />
+                    </div>
+                    <div data-role="fieldcontainer">
+                        <label for="inputEquipment" >Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" 
+                            placeholder="Descrição do Equipamento" />
+                    </div>
+                    <div data-role="fieldcontainer">
+                        <label for="inputSeries" >Séries:</label> <input type="text" id="inputSeries" name="inputSeries"  placeholder="Total de Séries" />
+                    </div>
+                    <div data-role="fieldcontainer">
+                        <label for="inputReps" >Repetições:</label> <input type="text" id="inputReps" name="inputReps"  placeholder="Número de Repetições" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div data-role="footer"></div>
+    </div>
+</body>
+</html>

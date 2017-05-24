@@ -30,8 +30,8 @@ function fillRoutinesSelection(selectedId) {
     if (selectedId) {
         slctRoutine.val(selectedId);
         slctRoutine.selectmenu("refresh");
-        $("#aNewItem").show();
-        $("#aEditRoutine").show();
+        $("#btNewItem").show();
+        $("#btEditRoutine").show();
     }
 }
 
@@ -39,7 +39,7 @@ function newRoutine() {
     $("#routineId").val("0"); // novo treino
     $("#inputName").val("");
 
-    $.mobile.changePage("#divEditRoutinePage");
+    $.mobile.changePage("#editRoutinePage");
 }
 
 function editRoutine() {
@@ -55,7 +55,7 @@ function editRoutine() {
         }
     });
 
-    $.mobile.changePage("#divEditRoutinePage");
+    $.mobile.changePage("#editRoutinePage");
 }
 
 function findRoutine(routineId) {
@@ -83,7 +83,7 @@ function saveRoutine() {
 
     fillRoutinesSelection(routineId);
 
-    $.mobile.changePage("#divMainPage");
+    $.mobile.changePage("#mainPage");
 }
 
 function currentRoutine() {
@@ -95,19 +95,37 @@ function showItems() {
     var itemsContainer = $("#itemsContainer");
     itemsContainer.empty();
 
+    var colors = [];
+    colors[true]='#e6ffe6';
+    colors[false]='#ffffe6';
+    var bkColorIdx=true;
+    var oldSequence=-1;
+    
     var items = currentRoutine().items;
     items.forEach(function(element) {
         // itemsContainer.append("<tr><td>"+element.exercise+"</td><td>"+element.equipment+"</td><td>"+element.series+"</td><td>"+element.reps+"</td></tr>");
         
-        var strItem='<li><a onclick="editItem(' + element.itemId + ')"><h4>' + element.exercise + '</h4></a>';
+        if(element.sequence != oldSequence){
+            bkColorIdx = !bkColorIdx;
+            oldSequence = element.sequence; 
+        }
+        
+        var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.itemId + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
+        
         if(element.equipment){
-            strItem+=' ['+element.equipment+'] ';
+            strItem+=' Eqpto: '+element.equipment;
         }
         if(element.series){
             strItem+=' '+element.series;
+            if(element.reps){
+                strItem+=' X';
+            }
         }
         if(element.reps){
-            strItem+=' X '+element.reps;
+            strItem+=' '+element.reps;
+        }
+        if(element.weight){
+            strItem+=' Carga: '+element.weight;
         }
         
         strItem+='</li>';
@@ -115,8 +133,13 @@ function showItems() {
         itemsContainer.append(strItem);
     });
     
-    $("#aNewItem").show();
-    $("#aEditRoutine").show();
+    $("#btNewItem").show();
+    $("#btEditRoutine").show();
+}
+
+function nextSequence(){
+    var items = currentRoutine().items;
+    return (items.length == 0)? 1: parseInt(items[items.length-1].sequence)+1;
 }
 
 function newItem() {
@@ -125,8 +148,10 @@ function newItem() {
     $("#inputEquipment").val("");
     $("#inputSeries").val("");
     $("#inputReps").val("");
+    $("#inputWeight").val("");
+    $("#inputSequence").val(nextSequence());
 
-    $.mobile.changePage("#divEditItemPage");
+    $.mobile.changePage("#editItemPage");
 }
 
 function findItem(itemId){
@@ -143,8 +168,10 @@ function editItem(itemId) {
     $("#inputEquipment").val(item.equipment);
     $("#inputSeries").val(item.series);
     $("#inputReps").val(item.reps);
+    $("#inputWeight").val(item.weight);
+    $("#inputSequence").val(item.sequence);
 
-    $.mobile.changePage("#divEditItemPage");
+    $.mobile.changePage("#editItemPage");
 }
 
 function saveItem() {
@@ -156,7 +183,9 @@ function saveItem() {
             exercise : $("#inputExercise").val(),
             equipment : $("#inputEquipment").val(),
             series : $("#inputSeries").val(),
-            reps : $("#inputReps").val()
+            reps : $("#inputReps").val(),
+            weight : $("#inputWeight").val(),
+            sequence : $("#inputSequence").val(),
         };
     } else {
         var item=findItem($("#itemId").val());
@@ -164,8 +193,13 @@ function saveItem() {
         item.equipment = $("#inputEquipment").val();
         item.series = $("#inputSeries").val();
         item.reps = $("#inputReps").val();
+        item.weight = $("#inputWeight").val();
+        item.sequence = $("#inputSequence").val();
     }
+    
+    //(re)ordenando conforme a sequencia
+    currentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
 
     showItems();
-    $.mobile.changePage("#divMainPage");
+    $.mobile.changePage("#mainPage");
 }

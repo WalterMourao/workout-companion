@@ -13,7 +13,7 @@
     <script src="js/index.js"></script>
 </head>
 <body>
-    <div id="divMainPage" data-role="page" data-theme="a">
+    <div id="mainPage" data-role="page" data-theme="a">
         <div data-role="header">
             <!-- 
             <a href="#popupMenu" data-rel="popup" data-transition="pop" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-bars">Menu</a>
@@ -30,33 +30,33 @@
         <div data-role="header">
             <div class="ui-field-contain ui-corner-all">
                 <form id="frmRoutines" onsubmit="return false;" class="ui-grid-b home-breakpoint">
-                    <div id="divRoutines" class="ui-block-a">
+                    <div class="ui-block-a">
                         <select name="slctRoutines" id="slctRoutines" onchange="showItems(); return true;" style="width: 100%">
                             <option value="-1">Nenhum treino foi criado</option>
                         </select>
                     </div>
-                    <div id="divEditRoutines" class="ui-block-b">
-                        <a id="aEditRoutine" onclick="editRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-edit" style="display: none">Edit Routine</a>
+                    <div class="ui-block-b">
+                        <a id="btEditRoutine" onclick="editRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-edit" style="display: none">Edit Routine</a>
                     </div>
-                    <div id="divNewRoutines" class="ui-block-c">
+                    <div class="ui-block-c">
                         <a onclick="newRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus">New Routine</a>
                     </div>
                 </form>
             </div>
         </div>
-        <div id="divContent" data-role="content">
-            <a id="aNewItem" onclick="newItem(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus" style="display: none">Novo item</a>
+        <div data-role="content">
+            <a id="btNewItem" onclick="newItem(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus" style="display: none">Novo item</a>
             <ul id="itemsContainer" data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b"></ul>
         </div>
     </div>
-    <div id="divEditRoutinePage" data-role="page" data-theme="a">
+    <div id="editRoutinePage" data-role="page" data-theme="a">
         <div data-role="header">
-            <a href="#divMainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
-            <h1>Edit Routine</h1>
+            <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
+            <h1>Editar Treino</h1>
             <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditRoutine').submit(); return false;">Confirmar</a>
         </div>
 
-        <div id="divEditRoutineContent" data-role="content">
+        <div data-role="content">
             <form id="frmEditRoutine">
                 <input type="hidden" id="routineId" />
                 <div data-role="content">
@@ -68,16 +68,19 @@
         </div>
         <div data-role="footer"></div>
     </div>
-    <div id="divEditItemPage" data-role="page" data-theme="a">
+    <div id="editItemPage" data-role="page" data-theme="a">
         <div data-role="header">
-            <a href="#divMainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
-            <h1>Edit Item</h1>
+            <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
+            <h1>Editar Exercício</h1>
             <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditItem').submit(); return false;">Confirmar</a>
         </div>
-        <div id="divEditItemContent" data-role="content">
+        <div data-role="content">
             <form id="frmEditItem">
                 <input type="hidden" id="itemId" />
                 <div data-role="content">
+                    <div data-role="fieldcontainer">
+                        <label for="inputSequence" >Sequência:</label> <input type="text" id="inputSequence" name="inputSequence"  placeholder="Sequência" />
+                    </div>
                     <div data-role="fieldcontainer">
                         <label for="inputExercise" >Exercício:</label> <input type="text" id="inputExercise" name="inputExercise"  placeholder="Descrição do Exercício" />
                     </div>
@@ -90,6 +93,9 @@
                     </div>
                     <div data-role="fieldcontainer">
                         <label for="inputReps" >Repetições:</label> <input type="text" id="inputReps" name="inputReps"  placeholder="Número de Repetições" />
+                    </div>
+                    <div data-role="fieldcontainer">
+                        <label for="inputWeight" >Carga:</label> <input type="text" id="inputWeight" name="inputWeight"  placeholder="Carga" />
                     </div>
                 </div>
             </form>

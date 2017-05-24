@@ -43,6 +43,13 @@ function initIndex() {
             },
             inputReps : {
                 digits : "Entre com o número de repetições."
+            },
+            inputWeight : {
+                digits : "Entre com a carga em kg."
+            },
+            inputSequence : {
+                digits : "Entre com a sequência.",
+                min : 0
             }
         },
         errorPlacement : function(error, element) {

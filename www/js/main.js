@@ -121,7 +121,7 @@ function showItems() {
         var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.id + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
         
         if(element.equipment){
-            strItem+=' Eqpto: '+element.equipment;saveIte
+            strItem+=' Eqpto: '+element.equipment;
         }
         if(element.series){
             strItem+=' '+element.series;

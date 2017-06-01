@@ -1,7 +1,16 @@
 var routines;
 
+function findId(arr, id){
+    for(index in arr){
+        if(arr[index].id == id){
+            return arr[index];
+        }
+    }
+    return null;
+}
+
 function initApp() {
-    routines = JSON.parse(localStorage.getItem("routines"));
+    routines = JSON.parse(window.localStorage.getItem("routines"));
     if (routines == null) {
         routines = [];
     }
@@ -10,7 +19,7 @@ function initApp() {
 }
 
 function saveRoutines() {
-    localStorage.setItem("routines", JSON.stringfy(routines));
+    window.localStorage.setItem("routines", JSON.stringfy(routines));
 }
 
 function fillRoutinesSelection(selectedId) {
@@ -43,32 +52,23 @@ function newRoutine() {
 }
 
 function editRoutine() {
-    var routineId = $("#slctRoutines").val();
+    var routine = currentRoutine();
 
-    routines.every(function(item) {
-        if (item.id == routineId) {
-            $("#routineId").val(routineId);
-            $("#inputName").val(item.name);
-            return false;
-        } else {
-            return true;
-        }
-    });
+    $("#routineId").val(routine.id);
+    $("#inputName").val(routine.name);
 
     $.mobile.changePage("#editRoutinePage");
 }
 
 function findRoutine(routineId) {
-    return routines.find(function(element) {
-        return element.id == routineId;
-    });
+    return findId(routines, routineId);
 }
 
 function saveRoutine() {
     var routineId = $("#routineId").val();
     var routineName = $("#inputName").val().trim();
 
-    if (routineId == 0) {// novo treino
+    if (routineId == "0") {// novo treino
         routineId = (0 - routines.length) - 1;
         routines[routines.length] = {
                 id : routineId,
@@ -155,15 +155,13 @@ function newItem() {
 }
 
 function findItem(itemId){
-    return currentRoutine().items.find(function(element){
-        return element.itemId == itemId;
-    });
+    return findId(currentRoutine().items,itemId);
 }
 
 function editItem(itemId) {
     var item=findItem(itemId);
     
-    $("#itemId").val(itemId); // novo exercício
+    $("#itemId").val(itemId);
     $("#inputExercise").val(item.exercise);
     $("#inputEquipment").val(item.equipment);
     $("#inputSeries").val(item.series);

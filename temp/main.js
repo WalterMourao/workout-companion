@@ -1,14 +1,5 @@
 var routines;
 
-function findId(arr, id){
-    for(index in arr){
-        if(arr[index].id == id){
-            return arr[index];
-        }
-    }
-    return null;
-}
-
 function initApp() {
     routines = JSON.parse(window.localStorage.getItem("routines"));
     if (routines == null) {
@@ -61,7 +52,12 @@ function editRoutine() {
 }
 
 function findRoutine(routineId) {
-    return findId(routines, routineId);
+    for(element in routines){
+        if(element.id == routineId){
+            return element
+        }
+    }
+    alert('Falha em findRoutine');
 }
 
 function saveRoutine() {
@@ -155,7 +151,12 @@ function newItem() {
 }
 
 function findItem(itemId){
-    return findId(currentRoutine().items,itemId);
+    for(element in currentRoutine().items){
+        if(element.itemId == itemId){
+            return element;
+        }
+    }
+    alert('Falha em findItem');
 }
 
 function editItem(itemId) {

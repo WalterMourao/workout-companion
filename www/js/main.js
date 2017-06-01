@@ -81,6 +81,8 @@ function saveRoutine() {
         routine.name = routineName;
     }
 
+    saveRoutines();
+    
     fillRoutinesSelection(routineId);
 
     $.mobile.changePage("#mainPage");
@@ -199,6 +201,8 @@ function saveItem() {
     //(re)ordenando conforme a sequencia
     currentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
 
+    saveRoutines();
+    
     showItems();
     $.mobile.changePage("#mainPage");
 }

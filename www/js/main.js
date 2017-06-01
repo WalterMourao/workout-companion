@@ -27,20 +27,26 @@ function fillRoutinesSelection(selectedId) {
 
     slctRoutine.empty();
 
-    routines.sort(function(a, b) {
-        return a.name.localeCompare(b.name);
-    });
-
-    // slctRoutine.append("<option value='0'>Selecione um treino</option>");
-    routines.forEach(function(element) {
-        slctRoutine.append($("<option />").val(element.id).text(element.name));
-    });
-
-    if (selectedId) {
-        slctRoutine.val(selectedId);
+    if(routines.length == 0){
+        slctRoutine.append($("<option />").val(-1).text("Nenhum treino foi criado"));
+        slctRoutine.val(-1);
         slctRoutine.selectmenu("refresh");
-        $("#btNewItem").show();
-        $("#btEditRoutine").show();
+    } else {
+        routines.sort(function(a, b) {
+            return a.name.localeCompare(b.name);
+        });
+
+        // slctRoutine.append("<option value='0'>Selecione um treino</option>");
+        routines.forEach(function(element) {
+            slctRoutine.append($("<option />").val(element.id).text(element.name));
+        });
+
+        if (selectedId) {
+            slctRoutine.val(selectedId);
+            slctRoutine.selectmenu("refresh");
+            $("#btNewItem").show();
+            $("#btEditRoutine").show();
+        }
     }
 }
 

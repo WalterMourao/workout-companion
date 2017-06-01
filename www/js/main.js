@@ -28,9 +28,8 @@ function fillRoutinesSelection(selectedId) {
     slctRoutine.empty();
 
     if(routines.length == 0){
-        slctRoutine.append($("<option />").val(-1).text("Nenhum treino foi criado"));
-        slctRoutine.val(-1);
-        slctRoutine.selectmenu("refresh");
+        slctRoutine.append($("<option />").val(0).text("Nenhum treino foi criado"));
+        slctRoutine.val(0);
     } else {
         routines.sort(function(a, b) {
             return a.name.localeCompare(b.name);
@@ -41,13 +40,14 @@ function fillRoutinesSelection(selectedId) {
             slctRoutine.append($("<option />").val(element.id).text(element.name));
         });
 
-        if (selectedId) {
-            slctRoutine.val(selectedId);
-            slctRoutine.selectmenu("refresh");
-            $("#btNewItem").show();
-            $("#btEditRoutine").show();
-        }
+        $("#btNewItem").show();
+        $("#btEditRoutine").show();
+
+        slctRoutine.val(selectedId? selectedId: routines[0].id);
+        showItems();
     }
+
+    slctRoutine.selectmenu("refresh");
 }
 
 function newRoutine() {
@@ -67,7 +67,7 @@ function editRoutine() {
 }
 
 function findRoutine(routineId) {
-    return findId(routines, routineId);
+    return findId(routines, routineId);Id
 }
 
 function saveRoutine() {

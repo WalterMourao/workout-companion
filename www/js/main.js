@@ -1,12 +1,7 @@
 var routines;
 
-function findId(arr, id){
-    for(index in arr){
-        if(arr[index].id == id){
-            return arr[index];
-        }
-    }
-    return null;
+function doSaveRoutines() {
+    window.localStorage.setItem("routines", JSON.stringfy(routines));
 }
 
 function initApp() {
@@ -18,8 +13,13 @@ function initApp() {
     fillRoutinesSelection(false);
 }
 
-function saveRoutines() {
-    window.localStorage.setItem("routines", JSON.stringfy(routines));
+function findId(arr, id){
+    for(index in arr){
+        if(arr[index].id == id){
+            return arr[index];
+        }
+    }
+    return null;
 }
 
 function fillRoutinesSelection(selectedId) {
@@ -81,7 +81,7 @@ function saveRoutine() {
         routine.name = routineName;
     }
 
-    saveRoutines();
+    doSaveRoutines();
     
     fillRoutinesSelection(routineId);
 
@@ -115,7 +115,7 @@ function showItems() {
         var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.id + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
         
         if(element.equipment){
-            strItem+=' Eqpto: '+element.equipment;
+            strItem+=' Eqpto: '+element.equipment;saveIte
         }
         if(element.series){
             strItem+=' '+element.series;
@@ -201,7 +201,7 @@ function saveItem() {
     //(re)ordenando conforme a sequencia
     currentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
 
-    saveRoutines();
+    doSaveRoutines();
     
     showItems();
     $.mobile.changePage("#mainPage");

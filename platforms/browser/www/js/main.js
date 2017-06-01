@@ -110,7 +110,7 @@ function showItems() {
             oldSequence = element.sequence; 
         }
         
-        var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.itemId + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
+        var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.id + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
         
         if(element.equipment){
             strItem+=' Eqpto: '+element.equipment;
@@ -155,7 +155,8 @@ function newItem() {
 }
 
 function findItem(itemId){
-    return findId(currentRoutine().items,itemId);
+    var items = currentRoutine().items;
+    return findId(items,itemId);
 }
 
 function editItem(itemId) {
@@ -177,7 +178,7 @@ function saveItem() {
         var items = currentRoutine().items;
         var itemId = (0 - items.length) - 1;
         items[items.length] = {
-            itemId : itemId,
+            id : itemId,
             exercise : $("#inputExercise").val(),
             equipment : $("#inputEquipment").val(),
             series : $("#inputSeries").val(),

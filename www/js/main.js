@@ -1,7 +1,7 @@
 var routines;
 
 function doSaveRoutines() {
-    window.localStorage.setItem("routines", JSON.stringfy(routines));
+    window.localStorage.setItem("routines", JSON.stringify(routines));
 }
 
 function initApp() {

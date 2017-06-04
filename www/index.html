@@ -31,8 +31,7 @@
             <div class="ui-field-contain ui-corner-all">
                 <form id="frmRoutines" onsubmit="return false;" class="ui-grid-b home-breakpoint">
                     <div class="ui-block-a">
-                        <select name="slctRoutines" id="slctRoutines" onchange="showItems(); return true;" style="width: 100%">
-                        </select>
+                        <select name="slctRoutines" id="slctRoutines" onchange="showItems(); return true;" style="width: 100%"></select>
                     </div>
                     <div class="ui-block-b">
                         <a id="btEditRoutine" onclick="editRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-edit" style="display: none">Edit Routine</a>
@@ -76,9 +75,10 @@
         <div data-role="content">
             <form id="frmEditItem">
                 <input type="hidden" id="itemId" />
+                <input type="hidden" id="inputSequence" />
                 <div data-role="content">
                     <div data-role="fieldcontainer">
-                        <label for="inputSequence" >Sequência:</label> <input type="text" id="inputSequence" name="inputSequence"  placeholder="Sequência" />
+                        <label for="inputIntercalate" >Intercalado:</label> <select name="slctIntercalate" id="slctIntercalate" onchange="checkEnableSeries(); return false;"></select>
                     </div>
                     <div data-role="fieldcontainer">
                         <label for="inputExercise" >Exercício:</label> <input type="text" id="inputExercise" name="inputExercise"  placeholder="Descrição do Exercício" />
@@ -87,8 +87,8 @@
                         <label for="inputEquipment" >Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" 
                             placeholder="Descrição do Equipamento" />
                     </div>
-                    <div data-role="fieldcontainer">
-                        <label for="inputSeries" >Séries:</label> <input type="text" id="inputSeries" name="inputSeries"  placeholder="Total de Séries" />
+                    <div id="fcSeries" data-role="fieldcontainer">
+                        <label for="inputSeries" >Séries:</label> <input type="text" id="inputSeries" name="inputSeries"  placeholder="Número de Séries" />
                     </div>
                     <div data-role="fieldcontainer">
                         <label for="inputReps" >Repetições:</label> <input type="text" id="inputReps" name="inputReps"  placeholder="Número de Repetições" />

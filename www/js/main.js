@@ -47,7 +47,7 @@ function fillRoutinesSelection(selectedId) {
         showItems();
     }
 
-    slctRoutine.selectmenu("refresh");
+    slctRoutine.selectmenu().selectmenu("refresh");
 }
 
 function newRoutine() {
@@ -109,8 +109,7 @@ function showItems() {
     var bkColorIdx=true;
     var oldSequence=-1;
     
-    var items = currentRoutine().items;
-    items.forEach(function(element) {
+    currentRoutine().items.forEach(function(element) {
         // itemsContainer.append("<tr><td>"+element.exercise+"</td><td>"+element.equipment+"</td><td>"+element.series+"</td><td>"+element.reps+"</td></tr>");
         
         if(element.sequence != oldSequence){
@@ -150,6 +149,28 @@ function nextSequence(){
     return (items.length == 0)? 1: parseInt(items[items.length-1].sequence)+1;
 }
 
+function fillIntercalate(ignoreId){
+    var slctIntercalate = $("#slctIntercalate");
+
+    slctIntercalate.empty();
+    slctIntercalate.append($("<option />").val(0).text("Não intercalado"));
+    currentRoutine().items.forEach(function(element) {
+        if(element.id != ignoreId){
+            slctIntercalate.append($("<option />").val(element.id).text(element.exercise));
+        }
+    });
+    slctIntercalate.val(0);
+    slctIntercalate.selectmenu().selectmenu("refresh");
+}
+    
+function checkEnableSeries(){
+    if($("#slctIntercalate").val() == 0){
+        $("#fcSeries").show();
+    } else {
+        $("#fcSeries").hide();
+    }
+}
+
 function newItem() {
     $("#itemId").val("0"); // novo exercício
     $("#inputExercise").val("");
@@ -159,6 +180,8 @@ function newItem() {
     $("#inputWeight").val("");
     $("#inputSequence").val(nextSequence());
 
+    fillIntercalate();
+    
     $.mobile.changePage("#editItemPage");
 }
 
@@ -178,32 +201,43 @@ function editItem(itemId) {
     $("#inputWeight").val(item.weight);
     $("#inputSequence").val(item.sequence);
 
+    fillIntercalate(itemId);
+
     $.mobile.changePage("#editItemPage");
 }
 
 function saveItem() {
+    var sequence, series;
+    var valIntercalate = $("#slctIntercalate").val();
+    if(valIntercalate == 0){ 
+        //não intercalado
+        sequence = $("#inputSequence").val();
+        series = $("#inputSeries").val();
+    } else {
+        //é intercalado
+        var intercalatedItem=findItem(valIntercalate);
+        sequence = intercalatedItem.sequence;
+        series = intercalatedItem.series;
+    }
+    
+    var item; 
+        
     if ($("#itemId").val() == 0) { // novo exercício
         var items = currentRoutine().items;
         var itemId = (0 - items.length) - 1;
-        items[items.length] = {
-            id : itemId,
-            exercise : $("#inputExercise").val(),
-            equipment : $("#inputEquipment").val(),
-            series : $("#inputSeries").val(),
-            reps : $("#inputReps").val(),
-            weight : $("#inputWeight").val(),
-            sequence : $("#inputSequence").val(),
-        };
+        item = {id : itemId};
+        items[items.length] = item; 
     } else {
-        var item=findItem($("#itemId").val());
-        item.exercise = $("#inputExercise").val();
-        item.equipment = $("#inputEquipment").val();
-        item.series = $("#inputSeries").val();
-        item.reps = $("#inputReps").val();
-        item.weight = $("#inputWeight").val();
-        item.sequence = $("#inputSequence").val();
+        item=findItem($("#itemId").val());
     }
     
+    item.exercise = $("#inputExercise").val();
+    item.equipment = $("#inputEquipment").val();
+    item.reps = $("#inputReps").val();
+    item.weight = $("#inputWeight").val();
+    item.series = series;
+    item.sequence = sequence;
+
     //(re)ordenando conforme a sequencia
     currentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
 

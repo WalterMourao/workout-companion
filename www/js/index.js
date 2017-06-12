@@ -27,17 +27,20 @@ function initIndex() {
             inputExercise : {
                 required : true
             },
+            /*** testando sem validação numérica
             inputSeries : {
                 digits : true
             },
             inputReps : {
                 digits : true
             }
+            ***/
         },
         messages : {
             inputExercise : {
                 required : "Entre com a descrição do exercício."
             },
+            /*** testando sem validação numérica
             inputSeries : {
                 digits : "Entre com o número de séries."
             },
@@ -47,6 +50,7 @@ function initIndex() {
             inputWeight : {
                 digits : "Entre com a carga em kg."
             },
+            ***/
             inputSequence : {
                 digits : "Entre com a sequência.",
                 min : 0

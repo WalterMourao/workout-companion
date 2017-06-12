@@ -44,7 +44,7 @@ function fillRoutinesSelection(selectedId) {
         $("#btEditRoutine").show();
 
         slctRoutine.val(selectedId? selectedId: routines[0].id);
-        showItems();
+        showSelectedRoutine();
     }
 
     slctRoutine.selectmenu().selectmenu("refresh");
@@ -53,15 +53,17 @@ function fillRoutinesSelection(selectedId) {
 function newRoutine() {
     $("#routineId").val("0"); // novo treino
     $("#inputName").val("");
+    $("#inputObs").val("");
 
     $.mobile.changePage("#editRoutinePage");
 }
 
 function editRoutine() {
-    var routine = currentRoutine();
+    var routine = getCurrentRoutine();
 
     $("#routineId").val(routine.id);
     $("#inputName").val(routine.name);
+    $("#inputObs").val(routine.obs);
 
     $.mobile.changePage("#editRoutinePage");
 }
@@ -73,18 +75,21 @@ function findRoutine(routineId) {
 function saveRoutine() {
     var routineId = $("#routineId").val();
     var routineName = $("#inputName").val().trim();
+    var routineObs = $("#inputObs").val().trim();
 
     if (routineId == "0") {// novo treino
         routineId = (0 - routines.length) - 1;
         routines[routines.length] = {
                 id : routineId,
                 name : routineName,
+                obs : routineObs,
                 items : [] 
         };
         itemsContainer = $("#itemsContainer").empty();
     } else {
         var routine = findRoutine(routineId);
         routine.name = routineName;
+        routine.obs = routineObs;
     }
 
     doSaveRoutines();
@@ -94,58 +99,71 @@ function saveRoutine() {
     $.mobile.changePage("#mainPage");
 }
 
-function currentRoutine() {
+function getCurrentRoutine() {
     var routineId = $("#slctRoutines").val();
     return findRoutine(routineId);
 }
 
-function showItems() {
-    var itemsContainer = $("#itemsContainer");
-    itemsContainer.empty();
-
-    var colors = [];
-    colors[true]='#e6ffe6';
-    colors[false]='#ffffe6';
-    var bkColorIdx=true;
-    var oldSequence=-1;
+function showSelectedRoutine() {
     
-    currentRoutine().items.forEach(function(element) {
-        // itemsContainer.append("<tr><td>"+element.exercise+"</td><td>"+element.equipment+"</td><td>"+element.series+"</td><td>"+element.reps+"</td></tr>");
-        
-        if(element.sequence != oldSequence){
-            bkColorIdx = !bkColorIdx;
-            oldSequence = element.sequence; 
+    var currentRoutine = getCurrentRoutine();
+    
+    if(currentRoutine){
+        $('#routineRest').text(currentRoutine.rest);
+        $('#routineObs').text(currentRoutine.obs);
+        if(currentRoutine.obs == ''){
+            $('#routineObs').hide();
+        } else {
+            $('#routineObs').show();
         }
         
-        var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.id + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
+        var itemsContainer = $("#itemsContainer");
+        itemsContainer.empty();
+    
+        var colors = [];
+        colors[true]='#e6ffe6';
+        colors[false]='#ffffe6';
+        var bkColorIdx=true;
+        var oldSequence=-1;
         
-        if(element.equipment){
-            strItem+=' Eqpto: '+element.equipment;
-        }
-        if(element.series){
-            strItem+=' '+element.series;
-            if(element.reps){
-                strItem+=' X';
+        currentRoutine.items.forEach(function(element) {
+            // itemsContainer.append("<tr><td>"+element.exercise+"</td><td>"+element.equipment+"</td><td>"+element.series+"</td><td>"+element.reps+"</td></tr>");
+            
+            if(element.sequence != oldSequence){
+                bkColorIdx = !bkColorIdx;
+                oldSequence = element.sequence; 
             }
-        }
-        if(element.reps){
-            strItem+=' '+element.reps;
-        }
-        if(element.weight){
-            strItem+=' Carga: '+element.weight;
-        }
+            
+            var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.id + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
+            
+            if(element.equipment){
+                strItem+=' Eqpto: '+element.equipment;
+            }
+            if(element.series){
+                strItem+=' '+element.series;
+                if(element.reps){
+                    strItem+=' X';
+                }
+            }
+            if(element.reps){
+                strItem+=' '+element.reps;
+            }
+            if(element.weight){
+                strItem+=' Carga: '+element.weight;
+            }
+            
+            strItem+='</li>';
+            
+            itemsContainer.append(strItem);
+        });
         
-        strItem+='</li>';
-        
-        itemsContainer.append(strItem);
-    });
-    
-    $("#btNewItem").show();
-    $("#btEditRoutine").show();
+        $("#btNewItem").show();
+        $("#btEditRoutine").show();
+    }
 }
 
 function nextSequence(){
-    var items = currentRoutine().items;
+    var items = getCurrentRoutine().items;
     return (items.length == 0)? 1: parseInt(items[items.length-1].sequence)+1;
 }
 
@@ -154,7 +172,7 @@ function fillIntercalate(ignoreId){
 
     slctIntercalate.empty();
     slctIntercalate.append($("<option />").val(0).text("Não intercalado"));
-    currentRoutine().items.forEach(function(element) {
+    getCurrentRoutine().items.forEach(function(element) {
         if(element.id != ignoreId){
             slctIntercalate.append($("<option />").val(element.id).text(element.exercise));
         }
@@ -186,7 +204,7 @@ function newItem() {
 }
 
 function findItem(itemId){
-    var items = currentRoutine().items;
+    var items = getCurrentRoutine().items;
     return findId(items,itemId);
 }
 
@@ -223,7 +241,7 @@ function saveItem() {
     var item; 
         
     if ($("#itemId").val() == 0) { // novo exercício
-        var items = currentRoutine().items;
+        var items = getCurrentRoutine().items;
         var itemId = (0 - items.length) - 1;
         item = {id : itemId};
         items[items.length] = item; 
@@ -239,10 +257,10 @@ function saveItem() {
     item.sequence = sequence;
 
     //(re)ordenando conforme a sequencia
-    currentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
+    getCurrentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
 
     doSaveRoutines();
     
-    showItems();
+    showSelectedRoutine();
     $.mobile.changePage("#mainPage");
 }

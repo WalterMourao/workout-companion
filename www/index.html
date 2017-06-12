@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/cordova.css" />
     <link rel="stylesheet" href="css/jquery.mobile.min.css" />
     <link rel="stylesheet" href="css/main.css" />
     <script src="cordova.js"></script>
@@ -12,8 +13,8 @@
     <script src="js/main.js"></script>
     <script src="js/index.js"></script>
 </head>
-<body>
-    <div id="mainPage" data-role="page" data-theme="a">
+<body style="text-transform: none">
+    <div id="mainPage" data-role="page">
         <div data-role="header">
             <!-- 
             <a href="#popupMenu" data-rel="popup" data-transition="pop" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-bars">Menu</a>
@@ -31,7 +32,7 @@
             <div class="ui-field-contain ui-corner-all">
                 <form id="frmRoutines" onsubmit="return false;" class="ui-grid-b home-breakpoint">
                     <div class="ui-block-a">
-                        <select name="slctRoutines" id="slctRoutines" onchange="showItems(); return true;" style="width: 100%"></select>
+                        <select name="slctRoutines" id="slctRoutines" onchange="showSelectedRoutine(); return true;" style="width: 100%"></select>
                     </div>
                     <div class="ui-block-b">
                         <a id="btEditRoutine" onclick="editRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-edit" style="display: none">Edit Routine</a>
@@ -41,13 +42,14 @@
                     </div>
                 </form>
             </div>
+            <div id="routineObs">xxx</div>
         </div>
         <div data-role="content">
             <a id="btNewItem" onclick="newItem(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus" style="display: none">Novo item</a>
-            <ul id="itemsContainer" data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b"></ul>
+            <ul id="itemsContainer" data-role="listview"></ul>
         </div>
     </div>
-    <div id="editRoutinePage" data-role="page" data-theme="a">
+    <div id="editRoutinePage" data-role="page">
         <div data-role="header">
             <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
             <h1>Editar Treino</h1>
@@ -59,14 +61,17 @@
                 <input type="hidden" id="routineId" />
                 <div data-role="content">
                     <div data-role="fieldcontainer">
-                        <label for="inputName" >Treino:</label> <input type="text" id="inputName" name="inputName"  placeholder="Nome do Treino" />
+                        <label for="inputName" >Nome:</label> <input type="text" id="inputName" name="inputName"  placeholder="Nome do Treino" />
+                    </div>
+                    <div data-role="fieldcontainer">
+                        <label for="inputObs" >Observações:</label> <input type="text" id="inputObs" name="inputObs"  placeholder="Observações" />
                     </div>
                 </div>
             </form>
         </div>
         <div data-role="footer"></div>
     </div>
-    <div id="editItemPage" data-role="page" data-theme="a">
+    <div id="editItemPage" data-role="page">
         <div data-role="header">
             <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
             <h1>Editar Exercício</h1>

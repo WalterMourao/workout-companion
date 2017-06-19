@@ -1,266 +1,279 @@
 var routines;
-
-function doSaveRoutines() {
-    window.localStorage.setItem("routines", JSON.stringify(routines));
-}
+var currentRoutine;
+var currentItem;
 
 function initApp() {
-    routines = JSON.parse(window.localStorage.getItem("routines"));
+    routines = JSON.parse(window.localStorage.getItem('routines'));
     if (routines == null) {
         routines = [];
     }
 
-    fillRoutinesSelection(false);
+    fillRoutinesList();
 }
 
-function findId(arr, id){
-    for(index in arr){
-        if(arr[index].id == id){
-            return arr[index];
+function doSaveRoutines() {
+    window.localStorage.setItem('routines', JSON.stringify(routines));
+}
+
+function indexOfId(arr, id) {
+    for (index in arr) {
+        if (arr[index].id == id) {
+            return index;
         }
     }
     return null;
 }
 
-function fillRoutinesSelection(selectedId) {
-    var slctRoutine = $("#slctRoutines");
+function findId(arr, id) {
+    return arr[indexOfId(arr, id)];
+}
 
-    slctRoutine.empty();
+function gotoMainPage() {
+    $.mobile.changePage('#mainPage');
+    fillRoutinesList();
+}
 
-    if(routines.length == 0){
-        slctRoutine.append($("<option />").val(0).text("Nenhum treino foi criado"));
-        slctRoutine.val(0);
+function fillRoutinesList() {
+    var listRoutines = $('#listRoutines');
+
+    listRoutines.children().remove();
+
+    if (routines.length == 0) {
+        listRoutines.append($('<li>Não há treinos</li>'));
     } else {
         routines.sort(function(a, b) {
             return a.name.localeCompare(b.name);
         });
 
-        // slctRoutine.append("<option value='0'>Selecione um treino</option>");
-        routines.forEach(function(element) {
-            slctRoutine.append($("<option />").val(element.id).text(element.name));
+        routines.forEach(function(routine) {
+            var text = '<h2>' + routine.name + '</h2>';
+            text = '<li><a onclick="showRoutine(' + routine.id + ')">' + text + '</a>';
+            text += '<a onclick="editRoutine(' + routine.id + ')" data-icon="gear">Editar</a></li>'
+            listRoutines.append($(text));
         });
+    }
+    listRoutines.listview('refresh'); // isso supre um bug do jqm
+}
 
-        $("#btNewItem").show();
-        $("#btEditRoutine").show();
+function itemToText(item) {
+    var text = '<h3>' + item.exercise + '</h3><p>' + item.series + 'x' + item.reps;
+    if (item.equipment != '') {
+        text += ' [Eqpto: ' + item.equipment + ']';
+    }
+    if (item.weight != '') {
+        text += ' [Carga: ' + item.weight + ']';
+    }
+    text += '</p>';
+    return text;
+}
 
-        slctRoutine.val(selectedId? selectedId: routines[0].id);
-        showSelectedRoutine();
+function itemToTextEdit(item) {
+    return '<a>' + itemToText(item) + '</a><a onclick="editItem(' + item.id + ')" data-icon="gear">Editar</a>'
+}
+
+function doFillItemsList(listId, itemToTextFunction) {
+    var listItems = $(listId);
+
+    listItems.children().remove();
+
+    var items = currentRoutine.items;
+
+    if (items.length == 0) {
+        listItems.hide();
+    } else {
+        var oldSequence = items[0].sequence
+
+        listItems.show();
+        items.forEach(function(item) {
+
+            if (item.sequence != oldSequence) {
+                listItems.append('<li data-role="list-divider"></li>');
+                oldSequence = item.sequence;
+            }
+
+            listItems.append($('<li>' + itemToTextFunction(item) + '</li>'));
+        });
+    }
+    listItems.listview('refresh'); // isso supre um bug do jqm
+}
+
+function fillItemsListEdit() {
+    doFillItemsList('#listEditItems', itemToTextEdit);
+}
+
+function fillItemsListShow() {
+    doFillItemsList('#listItems', itemToText);
+}
+
+function showRoutine(id) {
+    currentRoutine = findRoutine(id);
+
+    $('#viewRoutineName').html(currentRoutine.name);
+    $('#viewRoutineObs').html(currentRoutine.obs);
+    if(currentRoutine.obs == ''){
+        $('#viewRoutineObs').hide();
+    } else {
+        $('#viewRoutineObs').show();
     }
 
-    slctRoutine.selectmenu().selectmenu("refresh");
+    $.mobile.changePage('#showRoutinePage');
+
+    fillItemsListShow();
+}
+
+function gotoRoutineEditPage() {
+    $.mobile.changePage('#editRoutinePage');
+    fillItemsListEdit();
+}
+
+function doEditRoutine(routine) {
+    currentRoutine = routine;
+
+    $('#routineId').val(routine.id);
+    $('#inputName').val(routine.name);
+    $('#inputObs').val(routine.obs);
+
+    gotoRoutineEditPage();
 }
 
 function newRoutine() {
-    $("#routineId").val("0"); // novo treino
-    $("#inputName").val("");
-    $("#inputObs").val("");
-
-    $.mobile.changePage("#editRoutinePage");
+    doEditRoutine({
+        id : 0,
+        name : '',
+        obs : '',
+        items : []
+    });
 }
 
-function editRoutine() {
-    var routine = getCurrentRoutine();
-
-    $("#routineId").val(routine.id);
-    $("#inputName").val(routine.name);
-    $("#inputObs").val(routine.obs);
-
-    $.mobile.changePage("#editRoutinePage");
+function editRoutine(id) {
+    doEditRoutine(findRoutine(id));
 }
 
 function findRoutine(routineId) {
-    return findId(routines, routineId);Id
+    return findId(routines, routineId);
 }
 
 function saveRoutine() {
-    var routineId = $("#routineId").val();
-    var routineName = $("#inputName").val().trim();
-    var routineObs = $("#inputObs").val().trim();
+    currentRoutine.id = $('#routineId').val();
+    currentRoutine.name = $('#inputName').val().trim();
+    currentRoutine.obs = $('#inputObs').val().trim();
 
-    if (routineId == "0") {// novo treino
-        routineId = (0 - routines.length) - 1;
-        routines[routines.length] = {
-                id : routineId,
-                name : routineName,
-                obs : routineObs,
-                items : [] 
-        };
-        itemsContainer = $("#itemsContainer").empty();
-    } else {
-        var routine = findRoutine(routineId);
-        routine.name = routineName;
-        routine.obs = routineObs;
+    if (currentRoutine.id == 0) {// novo treino
+        currentRoutine.id = (0 - routines.length) - 1;
+        routines[routines.length] = currentRoutine;
     }
 
     doSaveRoutines();
-    
-    fillRoutinesSelection(routineId);
 
-    $.mobile.changePage("#mainPage");
+    gotoMainPage();
 }
 
-function getCurrentRoutine() {
-    var routineId = $("#slctRoutines").val();
-    return findRoutine(routineId);
+function nextSequence() {
+    var items = currentRoutine.items;
+    return (items.length == 0) ? 1 : parseInt(items[items.length - 1].sequence) + 1;
 }
 
-function showSelectedRoutine() {
-    
-    var currentRoutine = getCurrentRoutine();
-    
-    if(currentRoutine){
-        $('#routineRest').text(currentRoutine.rest);
-        $('#routineObs').text(currentRoutine.obs);
-        if(currentRoutine.obs == ''){
-            $('#routineObs').hide();
-        } else {
-            $('#routineObs').show();
-        }
-        
-        var itemsContainer = $("#itemsContainer");
-        itemsContainer.empty();
-    
-        var colors = [];
-        colors[true]='#e6ffe6';
-        colors[false]='#ffffe6';
-        var bkColorIdx=true;
-        var oldSequence=-1;
-        
-        currentRoutine.items.forEach(function(element) {
-            // itemsContainer.append("<tr><td>"+element.exercise+"</td><td>"+element.equipment+"</td><td>"+element.series+"</td><td>"+element.reps+"</td></tr>");
-            
-            if(element.sequence != oldSequence){
-                bkColorIdx = !bkColorIdx;
-                oldSequence = element.sequence; 
-            }
-            
-            var strItem='<li style="background-color: '+colors[bkColorIdx]+'"><a onclick="editItem(' + element.id + ')"><h4>' + element.sequence+' - '+element.exercise + '</h4></a>'
-            
-            if(element.equipment){
-                strItem+=' Eqpto: '+element.equipment;
-            }
-            if(element.series){
-                strItem+=' '+element.series;
-                if(element.reps){
-                    strItem+=' X';
-                }
-            }
-            if(element.reps){
-                strItem+=' '+element.reps;
-            }
-            if(element.weight){
-                strItem+=' Carga: '+element.weight;
-            }
-            
-            strItem+='</li>';
-            
-            itemsContainer.append(strItem);
-        });
-        
-        $("#btNewItem").show();
-        $("#btEditRoutine").show();
-    }
-}
-
-function nextSequence(){
-    var items = getCurrentRoutine().items;
-    return (items.length == 0)? 1: parseInt(items[items.length-1].sequence)+1;
-}
-
-function fillIntercalate(ignoreId){
-    var slctIntercalate = $("#slctIntercalate");
+function fillIntercalate(ignoreId) {
+    var slctIntercalate = $('#slctIntercalate');
 
     slctIntercalate.empty();
-    slctIntercalate.append($("<option />").val(0).text("Não intercalado"));
-    getCurrentRoutine().items.forEach(function(element) {
-        if(element.id != ignoreId){
-            slctIntercalate.append($("<option />").val(element.id).text(element.exercise));
+    slctIntercalate.append($('<option />').val(0).text('Não intercalado'));
+    currentRoutine.items.forEach(function(element) {
+        if (element.id != ignoreId) {
+            slctIntercalate.append($('<option />').val(element.id).text(element.exercise));
         }
     });
     slctIntercalate.val(0);
-    slctIntercalate.selectmenu().selectmenu("refresh");
+    slctIntercalate.selectmenu().selectmenu('refresh');
 }
-    
-function checkEnableSeries(){
-    if($("#slctIntercalate").val() == 0){
-        $("#fcSeries").show();
+
+function checkEnableSeries() {
+    if ($('#slctIntercalate').val() == 0) {
+        $('#fcSeries').show();
     } else {
-        $("#fcSeries").hide();
+        $('#fcSeries').hide();
     }
 }
 
-function newItem() {
-    $("#itemId").val("0"); // novo exercício
-    $("#inputExercise").val("");
-    $("#inputEquipment").val("");
-    $("#inputSeries").val("");
-    $("#inputReps").val("");
-    $("#inputWeight").val("");
-    $("#inputSequence").val(nextSequence());
+function doEditItem(item) {
 
-    fillIntercalate();
-    
-    $.mobile.changePage("#editItemPage");
+    currentItem = item;
+
+    $('#itemId').val(item.id);
+    $('#inputExercise').val(item.exercise);
+    $('#inputEquipment').val(item.equipment);
+    $('#inputSeries').val(item.series);
+    $('#inputReps').val(item.reps);
+    $('#inputWeight').val(item.weight);
+    $('#inputSequence').val(item.sequence);
+
+    fillIntercalate(item.id);
+
+    $.mobile.changePage('#editItemPage');
 }
 
-function findItem(itemId){
-    var items = getCurrentRoutine().items;
-    return findId(items,itemId);
+function newItem() {
+    doEditItem({
+        id : 0,
+        exercise : '',
+        equipment : '',
+        series : '',
+        reps : '',
+        weight : '',
+        sequence : nextSequence()
+    })
+}
+
+function findItem(itemId) {
+    var items = currentRoutine.items;
+    return findId(items, itemId);
 }
 
 function editItem(itemId) {
-    var item=findItem(itemId);
-    
-    $("#itemId").val(itemId);
-    $("#inputExercise").val(item.exercise);
-    $("#inputEquipment").val(item.equipment);
-    $("#inputSeries").val(item.series);
-    $("#inputReps").val(item.reps);
-    $("#inputWeight").val(item.weight);
-    $("#inputSequence").val(item.sequence);
-
-    fillIntercalate(itemId);
-
-    $.mobile.changePage("#editItemPage");
+    doEditItem(findItem(itemId));
 }
 
 function saveItem() {
     var sequence, series;
-    var valIntercalate = $("#slctIntercalate").val();
-    if(valIntercalate == 0){ 
-        //não intercalado
-        sequence = $("#inputSequence").val();
-        series = $("#inputSeries").val();
+    var valIntercalate = $('#slctIntercalate').val();
+    if (valIntercalate == 0) {
+        // não intercalado
+        sequence = $('#inputSequence').val();
+        series = $('#inputSeries').val();
     } else {
-        //é intercalado
-        var intercalatedItem=findItem(valIntercalate);
+        // é intercalado
+        var intercalatedItem = findItem(valIntercalate);
         sequence = intercalatedItem.sequence;
         series = intercalatedItem.series;
     }
-    
-    var item; 
-        
-    if ($("#itemId").val() == 0) { // novo exercício
-        var items = getCurrentRoutine().items;
-        var itemId = (0 - items.length) - 1;
-        item = {id : itemId};
-        items[items.length] = item; 
-    } else {
-        item=findItem($("#itemId").val());
+
+    if (currentItem.id == 0) { // novo exercício
+        var items = currentRoutine.items;
+        currentItem.id = (0 - items.length) - 1;
+        items[items.length] = currentItem;
     }
-    
-    item.exercise = $("#inputExercise").val();
-    item.equipment = $("#inputEquipment").val();
-    item.reps = $("#inputReps").val();
-    item.weight = $("#inputWeight").val();
-    item.series = series;
-    item.sequence = sequence;
 
-    //(re)ordenando conforme a sequencia
-    getCurrentRoutine().items.sort(function(a, b){return a.sequence-b.sequence});
+    currentItem.exercise = $('#inputExercise').val();
+    currentItem.equipment = $('#inputEquipment').val();
+    currentItem.reps = $('#inputReps').val();
+    currentItem.weight = $('#inputWeight').val();
+    currentItem.series = series;
+    currentItem.sequence = sequence;
 
-    doSaveRoutines();
-    
-    showSelectedRoutine();
-    $.mobile.changePage("#mainPage");
+    // (re)ordenando conforme a sequencia
+    currentRoutine.items.sort(function(a, b) {
+        return a.sequence - b.sequence
+    });
+
+    gotoRoutineEditPage();
+}
+
+function deleteRoutine() {
+    routines.splice(indexOfId(currentRoutine.id), 1);
+    gotoMainPage();
+}
+
+function deleteItem() {
+    currentRoutine.items.splice(indexOfId(currentItem.id), 1);
+    gotoRoutineEditPage();
 }

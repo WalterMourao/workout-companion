@@ -1,52 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css/cordova.css" />
-    <link rel="stylesheet" href="css/jquery.mobile.min.css" />
-    <link rel="stylesheet" href="css/main.css" />
-    <script src="cordova.js"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.mobile.min.js"></script>
-    <script src="js/jquery.validate.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/index.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- <link rel="stylesheet" href="css/cordova.css" /> -->
+<link rel="stylesheet" href="css/jquery.mobile.min.css" />
+<link rel="stylesheet" href="css/main.css" />
+<script src="cordova.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.mobile.min.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/index.js"></script>
 </head>
 <body style="text-transform: none">
     <div id="mainPage" data-role="page">
         <div data-role="header">
-            <!-- 
-            <a href="#popupMenu" data-rel="popup" data-transition="pop" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-bars">Menu</a>
-            <div data-role="popup" id="popupMenu">
-                <ul data-role="listview" data-inset="true" style="min-width: 210px;">
-                    <li><a href="ReceberPorEmail.html">Receber por e-mail</a></li>
-                    <li><a href="ComoPesquisar.html">Como pesquisar</a></li>
-                    <li><a href="PrecisoDeAjuda.html">Preciso de ajuda</a></li>
+            <h1>Treinos</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <ul id="listRoutines" data-role="listview" data-inset="true">
+            </ul>
+        </div>
+
+        <div data-role="footer">
+            <div data-role="navbar">
+                <ul>
+                    <li><a onclick="newRoutine();" data-icon="plus">Novo Treino</a></li>
                 </ul>
             </div>
-            --->
-            <h1>Workout Companion</h1>
         </div>
+    </div>
+    <div id="showRoutinePage" data-role="page">
         <div data-role="header">
-            <div class="ui-field-contain ui-corner-all">
-                <form id="frmRoutines" onsubmit="return false;" class="ui-grid-b home-breakpoint">
-                    <div class="ui-block-a">
-                        <select name="slctRoutines" id="slctRoutines" onchange="showSelectedRoutine(); return true;" style="width: 100%"></select>
-                    </div>
-                    <div class="ui-block-b">
-                        <a id="btEditRoutine" onclick="editRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-edit" style="display: none">Edit Routine</a>
-                    </div>
-                    <div class="ui-block-c">
-                        <a onclick="newRoutine(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus">New Routine</a>
-                    </div>
-                </form>
-            </div>
-            <div id="routineObs">xxx</div>
+            <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
+            <h1 id="viewRoutineName"></h1>
+            <p id="viewRoutineObs" style="text-align:center" id="viewRoutineObs"></p>
         </div>
-        <div data-role="content">
-            <a id="btNewItem" onclick="newItem(); return false;" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-plus" style="display: none">Novo item</a>
-            <ul id="itemsContainer" data-role="listview"></ul>
+        <div data-role="main" class="ui-content">
+            <ul id="listItems" data-role="listview" data-inset="true">
+            </ul>
         </div>
     </div>
     <div id="editRoutinePage" data-role="page">
@@ -55,56 +48,70 @@
             <h1>Editar Treino</h1>
             <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditRoutine').submit(); return false;">Confirmar</a>
         </div>
-
-        <div data-role="content">
+        <div data-role="content" class="ui-content">
             <form id="frmEditRoutine">
                 <input type="hidden" id="routineId" />
                 <div data-role="content">
                     <div data-role="fieldcontainer">
-                        <label for="inputName" >Nome:</label> <input type="text" id="inputName" name="inputName"  placeholder="Nome do Treino" />
+                        <label for="inputName">Nome:</label> <input type="text" id="inputName" name="inputName" placeholder="Nome do Treino" />
                     </div>
                     <div data-role="fieldcontainer">
-                        <label for="inputObs" >Observações:</label> <input type="text" id="inputObs" name="inputObs"  placeholder="Observações" />
+                        <label for="inputObs">Observações:</label> <input type="text" id="inputObs" name="inputObs" placeholder="Observações" />
                     </div>
                 </div>
             </form>
         </div>
-        <div data-role="footer"></div>
+        <div data-role="content" class="ui-content">
+            <ul id="listEditItems" data-role="listview" data-inset="true">
+            </ul>
+        </div>
+        <div data-role="footer">
+            <div data-role="navbar">
+                <ul>
+                    <li><a onclick="newItem();" data-icon="plus">Novo Exercício</a></li>
+                    <li><a onclick="if(confirm('Apagar o treino?')) deleteRoutine();" data-icon="delete">Apagar Treino</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div id="editItemPage" data-role="page">
         <div data-role="header">
-            <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
+            <a href="#editRoutinePage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
             <h1>Editar Exercício</h1>
             <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditItem').submit(); return false;">Confirmar</a>
         </div>
         <div data-role="content">
             <form id="frmEditItem">
-                <input type="hidden" id="itemId" />
-                <input type="hidden" id="inputSequence" />
+                <input type="hidden" id="itemId" /> <input type="hidden" id="inputSequence" />
                 <div data-role="content">
                     <div data-role="fieldcontainer">
-                        <label for="inputIntercalate" >Intercalado:</label> <select name="slctIntercalate" id="slctIntercalate" onchange="checkEnableSeries(); return false;"></select>
+                        <label for="inputIntercalate">Intercalado:</label> <select name="slctIntercalate" id="slctIntercalate" onchange="checkEnableSeries(); return false;"></select>
                     </div>
                     <div data-role="fieldcontainer">
-                        <label for="inputExercise" >Exercício:</label> <input type="text" id="inputExercise" name="inputExercise"  placeholder="Descrição do Exercício" />
+                        <label for="inputExercise">Exercício:</label> <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
                     </div>
                     <div data-role="fieldcontainer">
-                        <label for="inputEquipment" >Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" 
-                            placeholder="Descrição do Equipamento" />
+                        <label for="inputEquipment">Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" />
                     </div>
                     <div id="fcSeries" data-role="fieldcontainer">
-                        <label for="inputSeries" >Séries:</label> <input type="text" id="inputSeries" name="inputSeries"  placeholder="Número de Séries" />
+                        <label for="inputSeries">Séries:</label> <input type="text" id="inputSeries" name="inputSeries" placeholder="Número de Séries" />
                     </div>
                     <div data-role="fieldcontainer">
-                        <label for="inputReps" >Repetições:</label> <input type="text" id="inputReps" name="inputReps"  placeholder="Número de Repetições" />
+                        <label for="inputReps">Repetições:</label> <input type="text" id="inputReps" name="inputReps" placeholder="Número de Repetições" />
                     </div>
                     <div data-role="fieldcontainer">
-                        <label for="inputWeight" >Carga:</label> <input type="text" id="inputWeight" name="inputWeight"  placeholder="Carga" />
+                        <label for="inputWeight">Carga:</label> <input type="text" id="inputWeight" name="inputWeight" placeholder="Carga" />
                     </div>
                 </div>
             </form>
         </div>
-        <div data-role="footer"></div>
+        <div data-role="footer">
+            <div data-role="navbar">
+                <ul>
+                    <li><a onclick="if(confirm('Apagar o exercício?')) deleteItem();" data-icon="delete">Apagar Exercício</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -269,11 +269,11 @@ function saveItem() {
 }
 
 function deleteRoutine() {
-    routines.splice(indexOfId(currentRoutine.id), 1);
+    routines.splice(indexOfId(routines,currentRoutine.id), 1);
     gotoMainPage();
 }
 
 function deleteItem() {
-    currentRoutine.items.splice(indexOfId(currentItem.id), 1);
+    currentRoutine.items.splice(indexOfId(currentRoutine.items,currentItem.id), 1);
     gotoRoutineEditPage();
 }

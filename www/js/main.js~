@@ -3,23 +3,12 @@ var currentRoutine;
 var currentItem;
 
 function initApp() {
-    document.addEventListener("backbutton", onBackKeyDown, false);
-
     routines = JSON.parse(window.localStorage.getItem('routines'));
     if (routines == null) {
         routines = [];
     }
 
     fillRoutinesList();
-}
-
-var backFunction=null;
-
-function onBackKeyDown() {
-    if(backFunction != null){
-        backFunction();
-        backFunction = null;
-    }    
 }
 
 function doSaveRoutines() {
@@ -40,7 +29,6 @@ function findId(arr, id) {
 }
 
 function gotoMainPage() {
-    backFunction = null;
     $.mobile.changePage('#mainPage');
     fillRoutinesList();
 }
@@ -118,8 +106,6 @@ function fillItemsListShow() {
 }
 
 function showRoutine(id) {
-    backFunction = gotoMainPage;
-    
     currentRoutine = findRoutine(id);
 
     $('#viewRoutineName').html(currentRoutine.name);
@@ -136,14 +122,11 @@ function showRoutine(id) {
 }
 
 function gotoRoutineEditPage() {
-    backFunction = null;
     $.mobile.changePage('#editRoutinePage');
     fillItemsListEdit();
 }
 
 function doEditRoutine(routine) {
-    backFunction = gotoMainPage;
-
     currentRoutine = routine;
 
     $('#routineId').val(routine.id);
@@ -213,7 +196,6 @@ function checkEnableSeries() {
 }
 
 function doEditItem(item) {
-    backFunction = gotoRoutineEditPage;
 
     currentItem = item;
 

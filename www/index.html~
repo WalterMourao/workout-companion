@@ -15,7 +15,7 @@
 </head>
 <body style="text-transform: none">
     <div id="mainPage" data-role="page">
-        <div data-role="header" data-position="fixed">
+        <div data-role="header">
             <h1>Treinos</h1>
         </div>
         <div data-role="main" class="ui-content">
@@ -23,17 +23,17 @@
             </ul>
         </div>
 
-        <div data-role="footer" data-position="fixed">
+        <div data-role="footer">
             <div data-role="navbar">
                 <ul>
-                    <li><a onclick="newRoutine();">Novo Treino</a></li>
+                    <li><a onclick="newRoutine();" data-icon="plus">Novo Treino</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div id="showRoutinePage" data-role="page" data-position="fixed">
+    <div id="showRoutinePage" data-role="page">
         <div data-role="header">
-            <a href="#mainPage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
+            <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
             <h1 id="viewRoutineName"></h1>
             <p id="viewRoutineObs" style="text-align:center" id="viewRoutineObs"></p>
         </div>
@@ -43,10 +43,10 @@
         </div>
     </div>
     <div id="editRoutinePage" data-role="page">
-        <div data-role="header" data-position="fixed">
-            <a href="#mainPage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
+        <div data-role="header">
+            <a href="#mainPage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
             <h1>Editar Treino</h1>
-            <a class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a>
+            <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditRoutine').submit(); return false;">Confirmar</a>
         </div>
         <div data-role="content" class="ui-content">
             <form id="frmEditRoutine">
@@ -65,20 +65,20 @@
             <ul id="listEditItems" data-role="listview" data-inset="true">
             </ul>
         </div>
-        <div data-role="footer" data-position="fixed">
+        <div data-role="footer">
             <div data-role="navbar">
                 <ul>
-                    <li><a onclick="newItem();">Novo Exercício</a></li>
-                    <li><a onclick="if(confirm('Apagar o treino?')) deleteRoutine();">Apagar Treino</a></li>
+                    <li><a onclick="newItem();" data-icon="plus">Novo Exercício</a></li>
+                    <li><a onclick="if(confirm('Apagar o treino?')) deleteRoutine();" data-icon="delete">Apagar Treino</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div id="editItemPage" data-role="page" data-position="fixed">
-        <div data-role="header" data-position="fixed">
-            <a href="#editRoutinePage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
+    <div id="editItemPage" data-role="page">
+        <div data-role="header">
+            <a href="#editRoutinePage" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-carat-l">Voltar</a>
             <h1>Editar Exercício</h1>
-            <a class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditItem').submit(); return false;">Salvar</a>
+            <a href="#" class="ui-btn-icon-notext ui-btn ui-mini ui-corner-all ui-icon-check" onclick="$('#frmEditItem').submit(); return false;">Confirmar</a>
         </div>
         <div data-role="content">
             <form id="frmEditItem">
@@ -105,10 +105,10 @@
                 </div>
             </form>
         </div>
-        <div data-role="footer" data-position="fixed">
+        <div data-role="footer">
             <div data-role="navbar">
                 <ul>
-                    <li><a onclick="if(confirm('Apagar o exercício?')) deleteItem();">Apagar Exercício</a></li>
+                    <li><a onclick="if(confirm('Apagar o exercício?')) deleteItem();" data-icon="delete">Apagar Exercício</a></li>
                 </ul>
             </div>
         </div>

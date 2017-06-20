@@ -18,7 +18,6 @@ var backFunction=null;
 function onBackKeyDown() {
     if(backFunction != null){
         backFunction();
-        backFunction = null;
     }    
 }
 
@@ -80,7 +79,8 @@ function itemToText(item) {
 }
 
 function itemToTextEdit(item) {
-    return '<a>' + itemToText(item) + '</a><a onclick="editItem(' + item.id + ')" data-icon="gear">Editar</a>'
+    var text = '<a onclick="editItem(' + item.id + ')">' + itemToText(item) + '</a>';
+    return text;
 }
 
 function doFillItemsList(listId, itemToTextFunction) {
@@ -103,7 +103,8 @@ function doFillItemsList(listId, itemToTextFunction) {
                 oldSequence = item.sequence;
             }
 
-            listItems.append($('<li>' + itemToTextFunction(item) + '</li>'));
+            var liText = itemToTextFunction == itemToTextEdit?'<li data-icon="gear">':'<li>'; 
+            listItems.append($(liText + itemToTextFunction(item) + '</li>'));
         });
     }
     listItems.listview('refresh'); // isso supre um bug do jqm
@@ -117,9 +118,12 @@ function fillItemsListShow() {
     doFillItemsList('#listItems', itemToText);
 }
 
-function showRoutine(id) {
+function gotoShowRoutinePage(){
     backFunction = gotoMainPage;
-    
+    $.mobile.changePage('#showRoutinePage');
+}
+
+function showRoutine(id) {
     currentRoutine = findRoutine(id);
 
     $('#viewRoutineName').html(currentRoutine.name);
@@ -129,21 +133,17 @@ function showRoutine(id) {
     } else {
         $('#viewRoutineObs').show();
     }
-
-    $.mobile.changePage('#showRoutinePage');
-
+    gotoShowRoutinePage();
     fillItemsListShow();
 }
 
 function gotoRoutineEditPage() {
-    backFunction = null;
+    backFunction = gotoMainPage;
     $.mobile.changePage('#editRoutinePage');
     fillItemsListEdit();
 }
 
 function doEditRoutine(routine) {
-    backFunction = gotoMainPage;
-
     currentRoutine = routine;
 
     $('#routineId').val(routine.id);
@@ -212,9 +212,12 @@ function checkEnableSeries() {
     }
 }
 
-function doEditItem(item) {
+function gotoEditItemPage(){
     backFunction = gotoRoutineEditPage;
+    $.mobile.changePage('#editItemPage');
+}
 
+function doEditItem(item) {
     currentItem = item;
 
     $('#itemId').val(item.id);
@@ -224,10 +227,8 @@ function doEditItem(item) {
     $('#inputReps').val(item.reps);
     $('#inputWeight').val(item.weight);
     $('#inputSequence').val(item.sequence);
-
+    gotoEditItemPage();
     fillIntercalate(item.id);
-
-    $.mobile.changePage('#editItemPage');
 }
 
 function newItem() {

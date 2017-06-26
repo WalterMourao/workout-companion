@@ -5,6 +5,8 @@ var currentItem;
 function initApp() {
     document.addEventListener("backbutton", onBackKeyDown, false);
 
+    $("#listViewExercise").on("filterablebeforefilter", fillAutocompleteExercise);
+
     routines = JSON.parse(window.localStorage.getItem('routines'));
     if (routines == null) {
         routines = [];
@@ -13,12 +15,28 @@ function initApp() {
     fillRoutinesList();
 }
 
-var backFunction=null;
+/***********************************************************************************************************************
+ * Default exit, pede confirmação
+ */
+
+function onConfirmExit(button) {
+    if (button == 2) {// If User selected No, then we just do nothing
+        return;
+    } else {
+        navigator.app.exitApp();// Otherwise we quit the app.
+    }
+}
+
+/** **************** */
+
+var backFunction = null;
 
 function onBackKeyDown() {
-    if(backFunction != null){
+    if (backFunction == null) {
+        navigator.notification.confirm("Deseja encerrar o SimpliFit?", onConfirmExit, "Confirmação", "Sim,Não");
+    } else {
         backFunction();
-    }    
+    }
 }
 
 function doSaveRoutines() {
@@ -55,13 +73,15 @@ function fillRoutinesList() {
         routines.sort(function(a, b) {
             return a.name.localeCompare(b.name);
         });
-
+        
+        var html = '';
         routines.forEach(function(routine) {
             var text = '<h2>' + routine.name + '</h2>';
             text = '<li><a onclick="showRoutine(' + routine.id + ')">' + text + '</a>';
             text += '<a onclick="editRoutine(' + routine.id + ')" data-icon="gear">Editar</a></li>'
-            listRoutines.append($(text));
+            html += text;
         });
+        listRoutines.html(html);
     }
     listRoutines.listview('refresh'); // isso supre um bug do jqm
 }
@@ -91,11 +111,13 @@ function doFillItemsList(listId, itemToTextFunction) {
     var items = currentRoutine.items;
 
     if (items.length == 0) {
+        listItems.html('');
         listItems.hide();
     } else {
         var oldSequence = items[0].sequence
 
         listItems.show();
+        var html = '';
         items.forEach(function(item) {
 
             if (item.sequence != oldSequence) {
@@ -103,9 +125,10 @@ function doFillItemsList(listId, itemToTextFunction) {
                 oldSequence = item.sequence;
             }
 
-            var liText = itemToTextFunction == itemToTextEdit?'<li data-icon="gear">':'<li>'; 
-            listItems.append($(liText + itemToTextFunction(item) + '</li>'));
+            var liText = itemToTextFunction == itemToTextEdit ? '<li data-icon="gear">' : '<li>';
+            html += liText + itemToTextFunction(item) + '</li>';
         });
+        listItems.html(html);
     }
     listItems.listview('refresh'); // isso supre um bug do jqm
 }
@@ -118,7 +141,13 @@ function fillItemsListShow() {
     doFillItemsList('#listItems', itemToText);
 }
 
-function gotoShowRoutinePage(){
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
+function gotoShowRoutinePage() {
     backFunction = gotoMainPage;
     $.mobile.changePage('#showRoutinePage');
 }
@@ -128,7 +157,7 @@ function showRoutine(id) {
 
     $('#viewRoutineName').html(currentRoutine.name);
     $('#viewRoutineObs').html(currentRoutine.obs);
-    if(currentRoutine.obs == ''){
+    if (currentRoutine.obs == '') {
         $('#viewRoutineObs').hide();
     } else {
         $('#viewRoutineObs').show();
@@ -172,7 +201,7 @@ function findRoutine(routineId) {
 
 function saveRoutine() {
     currentRoutine.id = $('#routineId').val();
-    currentRoutine.name = $('#inputName').val().trim();
+    currentRoutine.name = toTitleCase($('#inputName').val().trim());
     currentRoutine.obs = $('#inputObs').val().trim();
 
     if (currentRoutine.id == 0) {// novo treino
@@ -212,7 +241,7 @@ function checkEnableSeries() {
     }
 }
 
-function gotoEditItemPage(){
+function gotoEditItemPage() {
     backFunction = gotoRoutineEditPage;
     $.mobile.changePage('#editItemPage');
 }
@@ -272,7 +301,7 @@ function saveItem() {
         items[items.length] = currentItem;
     }
 
-    currentItem.exercise = $('#inputExercise').val();
+    currentItem.exercise = toTitleCase($('#inputExercise').val());
     currentItem.equipment = $('#inputEquipment').val();
     currentItem.reps = $('#inputReps').val();
     currentItem.weight = $('#inputWeight').val();
@@ -288,11 +317,102 @@ function saveItem() {
 }
 
 function deleteRoutine() {
-    routines.splice(indexOfId(routines,currentRoutine.id), 1);
+    routines.splice(indexOfId(routines, currentRoutine.id), 1);
     gotoMainPage();
 }
 
 function deleteItem() {
-    currentRoutine.items.splice(indexOfId(currentRoutine.items,currentItem.id), 1);
+    currentRoutine.items.splice(indexOfId(currentRoutine.items, currentItem.id), 1);
     gotoRoutineEditPage();
 }
+
+// **********************
+
+function setValueAutocompleteExercise(value){
+    $('#inputExercise').val(value);
+    var listView = $('#listViewExercise');
+    listView.html('');
+    listView.listview('refresh');
+}
+
+var QUERY_PREFIX = 'exercício '; 
+
+function fillAutocompleteExercise(event, data) {
+    var listView = $(this);
+    var searchText = $(data.input).val();
+
+    listView.html('');
+
+    if (searchText && searchText.length > 4) {// mais de 5 chars digitados
+        $.ajax({
+            url : "http://suggestqueries.google.com/complete/search?client=firefox&hl=pt",
+            crossDomain : true,
+            dataType : 'jsonp',
+            headers : {
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+                'Content-Type' : 'application/json',
+                'Accept' : 'application/json'
+            },
+            data : {
+                q : QUERY_PREFIX+searchText
+            },
+            success: function(data) {
+                // Api returns [ Original Keyword, Searches[] ]
+                var results = data[1];
+                var html = '';
+                results.forEach(function(result) {
+                    if(result.indexOf(QUERY_PREFIX) == 0){
+                        var resultValue = toTitleCase(result.substring(QUERY_PREFIX.length));
+                        html += '<li><a onclick="setValueAutocompleteExercise(`'+resultValue+'`)">' + resultValue + '</a></li>';
+                    }
+                });
+
+                listView.html(html);
+                listView.listview('refresh');
+                listView.trigger('updatelayout');
+            },
+            error: function(jqXHR, textStatus, errorThrown ) {
+                //Não conectado?
+            } 
+        });
+    }
+}
+/*********************
+scope.search = function() {
+  // If searchText empty, don't search
+  if (scope.searchText == null || scope.searchText.length < 1)
+    return;
+
+  var url = 'http://suggestqueries.google.com/complete/search?';
+  url += 'callback=JSON_CALLBACK&client=firefox&hl=en&q=' 
+  url += encodeURIComponent(scope.searchText);
+  $http.defaults.useXDomain = true;
+
+  $http({
+    url: url,
+    method: 'JSONP',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+
+    }
+  }).
+  success(function(data, status, headers, config) {
+
+    // Api returns [ Original Keyword, Searches[] ]
+    var results = data[1];
+    if (results.indexOf(scope.searchText) === -1) {
+      data.unshift(scope.searchText);
+    }
+    scope.suggestions = results;
+    scope.selectedIndex = -1;
+  }).
+  error(function(data, status, headers, config) {
+    console.log('fail');
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+  });
+******************/

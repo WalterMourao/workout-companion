@@ -35,7 +35,7 @@
         <div data-role="header">
             <a href="#mainPage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
             <h1 id="viewRoutineName"></h1>
-            <p id="viewRoutineObs" style="text-align:center" id="viewRoutineObs"></p>
+            <p id="viewRoutineObs" style="text-align: center" id="viewRoutineObs"></p>
         </div>
         <div data-role="main" class="ui-content">
             <ul id="listItems" data-role="listview" data-inset="true">
@@ -89,6 +89,7 @@
                     </div>
                     <div data-role="fieldcontainer">
                         <label for="inputExercise">Exercício:</label> <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
+                        <ul id="listViewExercise" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#inputExercise"></ul>
                     </div>
                     <div data-role="fieldcontainer">
                         <label for="inputEquipment">Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" />

@@ -121,7 +121,7 @@ function doFillItemsList(listId, itemToTextFunction) {
         items.forEach(function(item) {
 
             if (item.sequence != oldSequence) {
-                listItems.append('<li data-role="list-divider"></li>');
+                html += '<li data-role="list-divider"></li>';
                 oldSequence = item.sequence;
             }
 

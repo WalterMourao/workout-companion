@@ -74,11 +74,11 @@ function fillRoutinesList() {
             return a.name.localeCompare(b.name);
         });
         
-        var html = '';
+        var html = '<li data-role="list-divider">Meus Treinos</li>';
         routines.forEach(function(routine) {
-            var text = '<h2>' + routine.name + '</h2>';
-            text = '<li><a onclick="showRoutine(' + routine.id + ')">' + text + '</a>';
-            text += '<a onclick="editRoutine(' + routine.id + ')" data-icon="gear">Editar</a></li>'
+            var text = '<h2>' + routine.name + '</h2><p>'+routine.obs+'</p>';
+            text = '<li class="ui-li-static ui-body-inherit"><a onclick="showRoutine(' + routine.id + ')">' + text + '</a></li>';
+//            text += '<a onclick="editRoutine(' + routine.id + ')" data-icon="gear">Editar</a></li>'
             html += text;
         });
         listRoutines.html(html);
@@ -98,13 +98,20 @@ function itemToText(item) {
     return text;
 }
 
-function itemToTextEdit(item) {
-    var text = '<a onclick="editItem(' + item.id + ')">' + itemToText(item) + '</a>';
+function itemToText(item) {
+    var text = '<h3>' + item.exercise + '</h3><p>' + item.series + 'x' + item.reps;
+    if (item.equipment != '') {
+        text += ' [Eqpto: ' + item.equipment + ']';
+    }
+    if (item.weight != '') {
+        text += ' [Carga: ' + item.weight + ']';
+    }
+    text += '</p>';
     return text;
 }
 
-function doFillItemsList(listId, itemToTextFunction) {
-    var listItems = $(listId);
+function fillItemsList() {
+    var listItems = $('#listItems');
 
     listItems.children().remove();
 
@@ -117,7 +124,7 @@ function doFillItemsList(listId, itemToTextFunction) {
         var oldSequence = items[0].sequence
 
         listItems.show();
-        var html = '';
+        var html = '<li data-role="list-divider"></li>';
         items.forEach(function(item) {
 
             if (item.sequence != oldSequence) {
@@ -125,20 +132,11 @@ function doFillItemsList(listId, itemToTextFunction) {
                 oldSequence = item.sequence;
             }
 
-            var liText = itemToTextFunction == itemToTextEdit ? '<li data-icon="gear">' : '<li>';
-            html += liText + itemToTextFunction(item) + '</li>';
+            html += '<li><a onclick="editItem(' + item.id + ')">' + itemToText(item) + '</a></li>';
         });
         listItems.html(html);
     }
     listItems.listview('refresh'); // isso supre um bug do jqm
-}
-
-function fillItemsListEdit() {
-    doFillItemsList('#listEditItems', itemToTextEdit);
-}
-
-function fillItemsListShow() {
-    doFillItemsList('#listItems', itemToText);
 }
 
 function toTitleCase(str) {
@@ -163,23 +161,12 @@ function showRoutine(id) {
         $('#viewRoutineObs').show();
     }
     gotoShowRoutinePage();
-    fillItemsListShow();
+    fillItemsList();
 }
 
 function gotoRoutineEditPage() {
     backFunction = gotoMainPage;
     $.mobile.changePage('#editRoutinePage');
-    fillItemsListEdit();
-}
-
-function doEditRoutine(routine) {
-    currentRoutine = routine;
-
-    $('#routineId').val(routine.id);
-    $('#inputName').val(routine.name);
-    $('#inputObs').val(routine.obs);
-
-    gotoRoutineEditPage();
 }
 
 function newRoutine() {
@@ -191,8 +178,12 @@ function newRoutine() {
     });
 }
 
-function editRoutine(id) {
-    doEditRoutine(findRoutine(id));
+function editRoutine() {
+    $('#routineId').val(currentRoutine.id);
+    $('#inputName').val(currentRoutine.name);
+    $('#inputObs').val(currentRoutine.obs);
+
+    gotoRoutineEditPage();
 }
 
 function findRoutine(routineId) {
@@ -211,7 +202,7 @@ function saveRoutine() {
 
     doSaveRoutines();
 
-    gotoMainPage();
+    gotoShowRoutinePage();
 }
 
 function nextSequence() {
@@ -313,7 +304,7 @@ function saveItem() {
         return a.sequence - b.sequence
     });
 
-    gotoRoutineEditPage();
+    gotoShowRoutinePage();
 }
 
 function deleteRoutine() {
@@ -323,7 +314,7 @@ function deleteRoutine() {
 
 function deleteItem() {
     currentRoutine.items.splice(indexOfId(currentRoutine.items, currentItem.id), 1);
-    gotoRoutineEditPage();
+    gotoShowRoutinePage();
 }
 
 // **********************

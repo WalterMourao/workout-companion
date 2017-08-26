@@ -2,51 +2,85 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
 <!-- <link rel="stylesheet" href="css/cordova.css" /> -->
-<link rel="stylesheet" href="css/jquery.mobile.min.css" />
-<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="vendor/jquery/jquery.mobile.min.css" />
+<link rel="stylesheet" href="vendor/font-awesome/font-awesome.min.css" />
+<link rel="stylesheet" href="vendor/waves/waves.min.css" />
+<link rel="stylesheet" href="vendor/wow/animate.css" />
+<link rel="stylesheet" href="vendor/nativedroid2/css/nativedroid2.css" />
+<!-- <link rel="stylesheet" href="css/main.css" /> -->
+
 <script src="cordova.js"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.mobile.min.js"></script>
-<script src="js/jquery.validate.min.js"></script>
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/jquery/jquery.mobile.min.js"></script>
+<script src="vendor/jquery/jquery-ui.min.js"></script>
+<script src="vendor/jquery/jquery.validate.min.js"></script>
+<script src="vendor/waves/waves.min.js"></script>
+<script src="vendor/wow/wow.min.js"></script>
+<script src="vendor/nativedroid2/js/nativedroid2.js"></script>
+<script src="vendor/nativedroid2/js/nd2settings.js"></script>
+
 <script src="js/main.js"></script>
 <script src="js/index.js"></script>
+<style>
+/* Prevent FOUC */
+body {
+	opacity: 0;
+}
+</style>
 </head>
 <body style="text-transform: none">
+
     <div id="mainPage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <h1>Treinos</h1>
+            <h1>SimpliFit</h1>
         </div>
-        <div data-role="main" class="ui-content">
-            <ul id="listRoutines" data-role="listview" data-inset="true">
+        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+			<ul id="listRoutines" data-role="listview" data-icon="false">
             </ul>
         </div>
 
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
-                    <li><a onclick="newRoutine();">Novo Treino</a></li>
+                    <li><a class="ui-btn ui-mini ui-corner-all" onclick="newRoutine();" href="#">Novo Treino</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div id="showRoutinePage" data-role="page" data-position="fixed">
+    
+    <div id="showRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a href="#mainPage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
+            <a href="#mainPage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-arrow-left"></i></a>
             <h1 id="viewRoutineName"></h1>
-            <p id="viewRoutineObs" style="text-align: center" id="viewRoutineObs"></p>
+            <a href="#" onclick="editRoutine(); return false;" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-edit"></i></a>
         </div>
-        <div data-role="main" class="ui-content">
-            <ul id="listItems" data-role="listview" data-inset="true">
+        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+            <p id="viewRoutineObs" data-role="list-divider"></p>
+            <hr/>
+            <ul id="listItems" data-role="listview" data-icon="false">
+            
             </ul>
         </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a class="ui-btn ui-mini ui-corner-all" onclick="newItem();">Novo Exercício</a></li>
+                    <li><a class="ui-btn ui-mini ui-corner-all" onclick="if(confirm('Apagar o treino?')) deleteRoutine();">Apagar Treino</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div id="editRoutinePage" data-role="page">
+
+    <div id="editRoutinePage" data-role="page" class="wow fadeInDown" data-wow-delay="0.2s">
         <div data-role="header" data-position="fixed">
-            <a href="#mainPage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
-            <h1>Editar Treino</h1>
-            <a class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a>
+            <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-close"></i></a>
+            <h1>Editando Treino</h1>
+            <a style="width: 100px" class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a>
         </div>
         <div data-role="content" class="ui-content">
             <form id="frmEditRoutine">
@@ -56,36 +90,33 @@
                         <label for="inputName">Nome:</label> <input type="text" id="inputName" name="inputName" placeholder="Nome do Treino" />
                     </div>
                     <div data-role="fieldcontainer">
-                        <label for="inputObs">Observações:</label> <input type="text" id="inputObs" name="inputObs" placeholder="Observações" />
+                        <label for="inputObs">Observações:</label> <input type="text" id="inputObs" name="inputObs" placeholder="Observações sobre esse treino" />
                     </div>
                 </div>
             </form>
         </div>
-        <div data-role="content" class="ui-content">
-            <ul id="listEditItems" data-role="listview" data-inset="true">
-            </ul>
-        </div>
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
-                    <li><a onclick="newItem();">Novo Exercício</a></li>
-                    <li><a onclick="if(confirm('Apagar o treino?')) deleteRoutine();">Apagar Treino</a></li>
+                    <li><a class="ui-btn ui-mini ui-corner-all" onclick="if(confirm('Apagar o treino?')) deleteRoutine();">Apagar Treino</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div id="editItemPage" data-role="page" data-position="fixed">
+    
+    <div id="editItemPage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a href="#editRoutinePage" class="ui-btn ui-mini ui-corner-all">Voltar</a>
-            <h1>Editar Exercício</h1>
-            <a class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditItem').submit(); return false;">Salvar</a>
+            <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-close"></i></a>
+            <h1>Editando Exercício</h1>
+            <a style="width: 100px" class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditItem').submit(); return false;">Salvar</a>
         </div>
         <div data-role="content">
             <form id="frmEditItem">
                 <input type="hidden" id="itemId" /> <input type="hidden" id="inputSequence" />
                 <div data-role="content">
                     <div data-role="fieldcontainer">
-                        <label for="inputIntercalate">Intercalado:</label> <select name="slctIntercalate" id="slctIntercalate" onchange="checkEnableSeries(); return false;"></select>
+                        <label for="slctIntercalate">Intercalado:</label>
+                            <select name="slctIntercalate" id="slctIntercalate" onchange="checkEnableSeries(); return false;" data-native-menu="false"></select>
                     </div>
                     <div data-role="fieldcontainer">
                         <label for="inputExercise">Exercício:</label> <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
@@ -109,7 +140,7 @@
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
-                    <li><a onclick="if(confirm('Apagar o exercício?')) deleteItem();">Apagar Exercício</a></li>
+                    <li><a class="ui-btn ui-mini ui-corner-all" onclick="if(confirm('Apagar o exercício?')) deleteItem();">Apagar Exercício</a></li>
                 </ul>
             </div>
         </div>

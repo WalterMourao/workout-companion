@@ -5,7 +5,7 @@ var currentItem;
 function initApp() {
     document.addEventListener("backbutton", onBackKeyDown, false);
 
-    $("#listViewExercise").on("filterablebeforefilter", fillAutocompleteExercise);
+//    $("#listViewExercise").on("filterablebeforefilter", fillAutocompleteExercise);
 
     routines = JSON.parse(window.localStorage.getItem('routines'));
     if (routines == null) {
@@ -74,7 +74,7 @@ function fillRoutinesList() {
             return a.name.localeCompare(b.name);
         });
         
-        var html = '<li data-role="list-divider">Meus Treinos</li>';
+        var html = '';
         routines.forEach(function(routine) {
             var text = '<h2>' + routine.name + '</h2><p>'+routine.obs+'</p>';
             text = '<li class="ui-li-static ui-body-inherit"><a onclick="showRoutine(' + routine.id + ')">' + text + '</a></li>';
@@ -124,7 +124,7 @@ function fillItemsList() {
         var oldSequence = items[0].sequence
 
         listItems.show();
-        var html = '<li data-role="list-divider"></li>';
+        var html = '';
         items.forEach(function(item) {
 
             if (item.sequence != oldSequence) {
@@ -132,7 +132,7 @@ function fillItemsList() {
                 oldSequence = item.sequence;
             }
 
-            html += '<li><a onclick="editItem(' + item.id + ')">' + itemToText(item) + '</a></li>';
+            html += '<li class="ui-li-static ui-body-inherit"><a onclick="editItem(' + item.id + ')">' + itemToText(item) + '</a></li>';
         });
         listItems.html(html);
     }
@@ -170,12 +170,13 @@ function gotoRoutineEditPage() {
 }
 
 function newRoutine() {
-    doEditRoutine({
+    currentRoutine = {
         id : 0,
         name : '',
         obs : '',
         items : []
-    });
+    };
+    editRoutine();
 }
 
 function editRoutine() {
@@ -224,14 +225,6 @@ function fillIntercalate(ignoreId) {
     slctIntercalate.selectmenu().selectmenu('refresh');
 }
 
-function checkEnableSeries() {
-    if ($('#slctIntercalate').val() == 0) {
-        $('#fcSeries').show();
-    } else {
-        $('#fcSeries').hide();
-    }
-}
-
 function gotoEditItemPage() {
     backFunction = gotoRoutineEditPage;
     $.mobile.changePage('#editItemPage');
@@ -273,17 +266,15 @@ function editItem(itemId) {
 }
 
 function saveItem() {
-    var sequence, series;
+    var sequence;
     var valIntercalate = $('#slctIntercalate').val();
     if (valIntercalate == 0) {
         // não intercalado
         sequence = $('#inputSequence').val();
-        series = $('#inputSeries').val();
     } else {
         // é intercalado
         var intercalatedItem = findItem(valIntercalate);
         sequence = intercalatedItem.sequence;
-        series = intercalatedItem.series;
     }
 
     if (currentItem.id == 0) { // novo exercício
@@ -294,9 +285,9 @@ function saveItem() {
 
     currentItem.exercise = toTitleCase($('#inputExercise').val());
     currentItem.equipment = $('#inputEquipment').val();
+    currentItem.series = $('#inputSeries').val();
     currentItem.reps = $('#inputReps').val();
     currentItem.weight = $('#inputWeight').val();
-    currentItem.series = series;
     currentItem.sequence = sequence;
 
     // (re)ordenando conforme a sequencia
@@ -304,7 +295,7 @@ function saveItem() {
         return a.sequence - b.sequence
     });
 
-    gotoShowRoutinePage();
+    showRoutine(currentRoutine.id);
 }
 
 function deleteRoutine() {

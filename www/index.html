@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes" />
 
 <!-- <link rel="stylesheet" href="css/cordova.css" /> -->
@@ -14,23 +14,28 @@
 <link rel="stylesheet" href="vendor/nativedroid2/css/nativedroid2.css" />
 <!-- <link rel="stylesheet" href="css/main.css" /> -->
 
-<script src="cordova.js"></script>
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/jquery/jquery.mobile.min.js"></script>
-<script src="vendor/jquery/jquery-ui.min.js"></script>
-<script src="vendor/jquery/jquery.validate.min.js"></script>
-<script src="vendor/waves/waves.min.js"></script>
-<script src="vendor/wow/wow.min.js"></script>
-<script src="vendor/nativedroid2/js/nativedroid2.js"></script>
-<script src="vendor/nativedroid2/js/nd2settings.js"></script>
-
-<script src="js/main.js"></script>
-<script src="js/index.js"></script>
-<style>
+<style type="text/css">
 /* Prevent FOUC */
 body {
 	opacity: 0;
 }
+
+.btn-save {
+	width: 100px !important;
+	font-weight: 400 !important;
+}
+
+.ui-li-static {
+	border-top-color: inactiveborder !important;
+	border-top-style: dotted !important;
+	border-top-width: 0.5px !important;
+}
+
+.error {
+    color: #FF0000 !important;
+    margin-bottom: 0.4em !important;
+}
+
 </style>
 </head>
 <body style="text-transform: none">
@@ -40,7 +45,7 @@ body {
             <h1>SimpliFit</h1>
         </div>
         <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
-			<ul id="listRoutines" data-role="listview" data-icon="false">
+            <ul id="listRoutines" data-role="listview" data-icon="false">
             </ul>
         </div>
 
@@ -52,7 +57,7 @@ body {
             </div>
         </div>
     </div>
-    
+
     <div id="showRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
             <a href="#mainPage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-arrow-left"></i></a>
@@ -60,10 +65,10 @@ body {
             <a href="#" onclick="editRoutine(); return false;" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-edit"></i></a>
         </div>
         <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
-            <p id="viewRoutineObs" data-role="list-divider"></p>
-            <hr/>
+            <p id="viewRoutineObs"></p>
+        </div>
+        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
             <ul id="listItems" data-role="listview" data-icon="false">
-            
             </ul>
         </div>
         <div data-role="footer" data-position="fixed">
@@ -76,22 +81,19 @@ body {
         </div>
     </div>
 
-    <div id="editRoutinePage" data-role="page" class="wow fadeInDown" data-wow-delay="0.2s">
+    <div id="editRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
             <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-close"></i></a>
             <h1>Editando Treino</h1>
-            <a style="width: 100px" class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a>
+            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditRoutine').submit(); return false;"><i class="zmdi zmdi-check"></i></a>
+            <!--             <a class="ui-btn ui-mini waves-effect waves-button waves-effect waves-button btn-save" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a> -->
         </div>
-        <div data-role="content" class="ui-content">
-            <form id="frmEditRoutine">
+        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+            <form id="frmEditRoutine" action="">
                 <input type="hidden" id="routineId" />
                 <div data-role="content">
-                    <div data-role="fieldcontainer">
-                        <label for="inputName">Nome:</label> <input type="text" id="inputName" name="inputName" placeholder="Nome do Treino" />
-                    </div>
-                    <div data-role="fieldcontainer">
-                        <label for="inputObs">Observações:</label> <input type="text" id="inputObs" name="inputObs" placeholder="Observações sobre esse treino" />
-                    </div>
+                    <label for="inputName">Nome:</label> <input type="text" id="inputName" name="inputName" placeholder="Nome do Treino" /> <label for="inputObs">Observações:</label> <input
+                        type="text" id="inputObs" name="inputObs" placeholder="Observações sobre esse treino" />
                 </div>
             </form>
         </div>
@@ -103,37 +105,25 @@ body {
             </div>
         </div>
     </div>
-    
+
     <div id="editItemPage" data-role="page">
         <div data-role="header" data-position="fixed">
             <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-close"></i></a>
             <h1>Editando Exercício</h1>
-            <a style="width: 100px" class="ui-btn ui-mini ui-corner-all" onclick="$('#frmEditItem').submit(); return false;">Salvar</a>
+            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditItem').submit(); return false;"><i class="zmdi zmdi-check"></i></a>
+            <!--             <a class="ui-btn ui-mini waves-effect waves-button waves-effect waves-button btn-save" onclick="$('#frmEditItem').submit(); return false;">Salvar</a> -->
         </div>
-        <div data-role="content">
-            <form id="frmEditItem">
+        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+            <form id="frmEditItem" action="">
                 <input type="hidden" id="itemId" /> <input type="hidden" id="inputSequence" />
                 <div data-role="content">
-                    <div data-role="fieldcontainer">
-                        <label for="slctIntercalate">Intercalado:</label>
-                            <select name="slctIntercalate" id="slctIntercalate" onchange="checkEnableSeries(); return false;" data-native-menu="false"></select>
-                    </div>
-                    <div data-role="fieldcontainer">
-                        <label for="inputExercise">Exercício:</label> <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
-                        <ul id="listViewExercise" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#inputExercise"></ul>
-                    </div>
-                    <div data-role="fieldcontainer">
-                        <label for="inputEquipment">Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" />
-                    </div>
-                    <div id="fcSeries" data-role="fieldcontainer">
-                        <label for="inputSeries">Séries:</label> <input type="text" id="inputSeries" name="inputSeries" placeholder="Número de Séries" />
-                    </div>
-                    <div data-role="fieldcontainer">
-                        <label for="inputReps">Repetições:</label> <input type="text" id="inputReps" name="inputReps" placeholder="Número de Repetições" />
-                    </div>
-                    <div data-role="fieldcontainer">
-                        <label for="inputWeight">Carga:</label> <input type="text" id="inputWeight" name="inputWeight" placeholder="Carga" />
-                    </div>
+                    <label for="inputExercise">Exercício:</label> <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
+                    <!--                         <ul id="listViewExercise" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#inputExercise"></ul> -->
+
+                    <label for="inputEquipment">Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" /> <label for="inputSeries">Séries:</label>
+                    <input type="text" id="inputSeries" name="inputSeries" placeholder="Número de Séries" /> <label for="inputReps">Repetições:</label> <input type="text" id="inputReps"
+                        name="inputReps" placeholder="Número de Repetições" /> <label for="inputWeight">Carga:</label> <input type="text" id="inputWeight" name="inputWeight" placeholder="Carga" /> <label
+                        for="slctIntercalate">Intercalado:</label> <select name="slctIntercalate" id="slctIntercalate" data-native-menu="false"></select>
                 </div>
             </form>
         </div>
@@ -145,5 +135,20 @@ body {
             </div>
         </div>
     </div>
+
+    <script src="cordova.js" type="text/javascript"></script>
+    <script src="vendor/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="vendor/jquery/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="vendor/jquery/jquery.mobile.min.js" type="text/javascript"></script>
+    <script src="vendor/jquery/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="vendor/waves/waves.min.js" type="text/javascript"></script>
+    <script src="vendor/wow/wow.min.js" type="text/javascript"></script>
+    <script src="vendor/nativedroid2/js/nativedroid2.js" type="text/javascript"></script>
+    <script src="vendor/nativedroid2/js/nd2settings.js" type="text/javascript"></script>
+
+    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/index.js" type="text/javascript"></script>
+
+
 </body>
 </html>

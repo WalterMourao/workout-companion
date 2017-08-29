@@ -1,6 +1,7 @@
 var routines;
 var currentRoutine;
 var currentItem;
+var currentPage='mainPage';
 
 function initApp() {
     document.addEventListener("backbutton", onBackKeyDown, false);
@@ -86,32 +87,54 @@ function fillRoutinesList() {
     listRoutines.listview('refresh'); // isso supre um bug do jqm
 }
 
-function itemToText(item) {
-    var text = '<h3>' + item.exercise + '</h3><p>' + item.series + 'x' + item.reps;
-    if (item.equipment != '') {
-        text += ' [Eqpto: ' + item.equipment + ']';
-    }
-    if (item.weight != '') {
-        text += ' [Carga: ' + item.weight + ']';
-    }
-    text += '</p>';
-    return text;
+function _itemToTextMenu(itemId){
+    return ''+
+    `<div style="display: none;" id="itemMenu${itemId}-placeholder"></div>`+ 
+    `<div class="ui-screen-hidden ui-popup-screen ui-overlay-inherit" id="itemMenu${itemId}-screen"></div>`+ 
+    `<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="itemMenu${itemId}-popup">`+
+    `<div data-role="popup" id="itemMenu${itemId}" class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all">`+
+    `<ul data-role="listview" data-icon="false" class="ui-listview">`+
+    `<li class="ui-first-child">`+
+    `<a class="ui-btn waves-effect waves-button" onclick="editItem(${itemId});">Editar Exercício</a></a>`+
+    `</li>`+
+    `<li>`+
+    `<a class="ui-btn waves-effect waves-button" onclick="if(confirm('Apagar o exercício?')) deleteItem(${itemId});">Remover Exercício</a>`+
+    `</li>`+
+    `<li class="ui-last-child">`+
+    `<a class="ui-btn waves-effect waves-button" onclick="newItem();">Novo Exercício</a>`+
+    `</li>`+
+    `</ul>`+
+    `</div>`+
+    `</div>`;
 }
 
 function itemToText(item) {
-    var text = '<h3>' + item.exercise + '</h3><p>' + item.series + 'x' + item.reps;
-    if (item.equipment != '') {
-        text += ' [Eqpto: ' + item.equipment + ']';
+    //montando o card
+    var text = '<div class="nd2-card"><div data-role="header" role="banner" class="ui-header ui-bar-inherit"><div class="card-title has-supporting-text" style="width: 85%; padding-top: 1px; padding-bottom: 1px;"><h4>';
+    text += item.exercise;
+    text += '</h4></div><a href="#showItemMenu'+item.id+'" data-rel="popup" class="ui-btn-right wow fadeIn waves-effect waves-button ui-btn" data-wow-delay="1.2s" aria-haspopup="true" aria-owns="showRoutineMenuX" aria-expanded="false" data-role="button" role="button"><i class="zmdi zmdi-more-vert"></i></a></div>';
+    text += '<div class="card-supporting-text has-action has-title">';
+    if (item.equipment) {
+        text += '<label>Equipamento:</label>' + item.equipment;
     }
-    if (item.weight != '') {
-        text += ' [Carga: ' + item.weight + ']';
+    if (item.series){
+        text += '<label>Séries:</label>'+item.series;
     }
-    text += '</p>';
+    if (item.reps){
+        text += '<label>Repetições:</label>'+item.reps;
+    }
+    if (item.weight) {
+        text += '<label>Carga:</label>'+item.weight;
+    }
+    text += '</div></div>';
+    //montando o menu do card
+    text += _itemToTextMenu(item.id);
+    
     return text;
 }
 
 function fillItemsList() {
-    var listItems = $('#listItems');
+    var listItems = $('#showRoutineContent');
 
     listItems.children().remove();
 
@@ -127,16 +150,16 @@ function fillItemsList() {
         var html = '';
         items.forEach(function(item) {
 
-            if (item.sequence != oldSequence) {
-                html += '<li data-role="list-divider"></li>';
-                oldSequence = item.sequence;
-            }
+//            if (item.sequence != oldSequence) {
+//                html += '<li data-role="list-divider"></li>';
+//                oldSequence = item.sequence;
+//            }
 
-            html += '<li class="ui-li-static ui-body-inherit"><a onclick="editItem(' + item.id + ')">' + itemToText(item) + '</a></li>';
+            html += itemToText(item);
         });
         listItems.html(html);
     }
-    listItems.listview('refresh'); // isso supre um bug do jqm
+    //listItems.listview('refresh'); // isso supre um bug do jqm
 }
 
 function toTitleCase(str) {
@@ -164,11 +187,6 @@ function showRoutine(id) {
     fillItemsList();
 }
 
-function gotoRoutineEditPage() {
-    backFunction = gotoMainPage;
-    $.mobile.changePage('#editRoutinePage');
-}
-
 function newRoutine() {
     currentRoutine = {
         id : 0,
@@ -176,15 +194,21 @@ function newRoutine() {
         obs : '',
         items : []
     };
-    editRoutine();
+    editRoutine(gotoMainPage);
 }
 
-function editRoutine() {
+function editRoutine(_backFunction) {
+    if(_backFunction){
+        backFunction = _backFunction;
+    } else {
+        backFunction = gotoShowRoutinePage;
+    }
+
     $('#routineId').val(currentRoutine.id);
     $('#inputName').val(currentRoutine.name);
     $('#inputObs').val(currentRoutine.obs);
 
-    gotoRoutineEditPage();
+    $.mobile.changePage('#editRoutinePage');
 }
 
 function findRoutine(routineId) {
@@ -226,7 +250,7 @@ function fillIntercalate(ignoreId) {
 }
 
 function gotoEditItemPage() {
-    backFunction = gotoRoutineEditPage;
+    backFunction = gotoShowRoutinePage;
     $.mobile.changePage('#editItemPage');
 }
 
@@ -303,8 +327,8 @@ function deleteRoutine() {
     gotoMainPage();
 }
 
-function deleteItem() {
-    currentRoutine.items.splice(indexOfId(currentRoutine.items, currentItem.id), 1);
+function deleteItem(itemId) {
+    currentRoutine.items.splice(indexOfId(currentRoutine.items, itemId), 1);
     gotoShowRoutinePage();
 }
 

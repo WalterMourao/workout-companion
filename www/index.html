@@ -43,7 +43,9 @@ body {
     <div id="mainPage" data-role="page">
         <div data-role="header" data-position="fixed">
             <h1>SimpliFit</h1>
-            <a href="#mainMenu" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'><i class="zmdi zmdi-more-vert"></i></a>
+            <a href="#mainMenu" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'>
+                <i class="zmdi zmdi-more-vert"></i>
+            </a>
         </div>
         <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
             <ul id="listRoutines" data-role="listview" data-icon="false">
@@ -60,19 +62,23 @@ body {
 
         <div data-role="popup" id="mainMenu">
             <ul data-role="listview" data-icon="false">
-                <li><a class="ui-btn" onclick="newRoutine();" href="#">Novo Treino</a></li>
+                <li>
+                    <a class="ui-btn" onclick="newRoutine();" href="#">Novo Treino</a>
+                </li>
             </ul>
         </div>
     </div>
 
     <div id="showRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a href="#mainPage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-arrow-left"></i></a>
+            <a href="#mainPage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button">
+                <i class="zmdi zmdi-arrow-left"></i>
+            </a>
             <h1 id="viewRoutineName"></h1>
-            <a href="#showRoutineMenu" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'><i class="zmdi zmdi-more-vert"></i></a>
-        </div>
-        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
-            <p id="viewRoutineObs"></p>
+            <a href="#showRoutineMenu" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'>
+                <i class="zmdi zmdi-more-vert"></i>
+            </a>
+            <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 72px; margin-right: 72px; font-weight: 400" id="viewRoutineObs"></p>
         </div>
         <div id="showRoutineContent" role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
             <div class="nd2-card">
@@ -80,44 +86,64 @@ body {
                     <div class="card-title has-supporting-text" style="width: 85%">
                         <h4>Supino na marreta kjhfa kjhk kjhk kh oo oi y o u y oi o y u o i u y o x x x x x x x x sss</h4>
                     </div>
-                    <a href="#showRoutineMenuX" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'><i class="zmdi zmdi-more-vert"></i></a>
+                    <a href="#showRoutineMenuX" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'>
+                        <i class="zmdi zmdi-more-vert"></i>
+                    </a>
                 </div>
 
                 <div class="card-supporting-text has-action has-title">
-                    <label>Equipamento:</label> Equipamento
-                    <label>Séries:</label> Séries
-                    <label>Repetições:</label> Repetições
+                    <label>Equipamento:</label>
+                    Equipamento
+                    <label>Séries:</label>
+                    Séries
+                    <label>Repetições:</label>
+                    Repetições
                     <label>Carga:</label>
                 </div>
             </div>
             <div data-role="popup" id="showRoutineMenuX">
                 <ul data-role="listview" data-icon="false">
-                    <li><a class="ui-btn" onclick="editRoutine();">Editar Treino</a></li>
-                    <li><a class="ui-btn" onclick="if(confirm('Apagar o treino?')) deleteRoutine();">Remover Treino</a></li>
-                    <li><a class="ui-btn" onclick="newItem();">Novo Exercício</a></li>
+                    <li>
+                        <a class="ui-btn" onclick="editRoutine();">Editar Treino</a>
+                    </li>
+                    <li>
+                        <a class="ui-btn" onclick="if(confirm('Apagar o treino?')) deleteRoutine();">Remover Treino</a>
+                    </li>
+                    <li>
+                        <a class="ui-btn" onclick="newItem();">Novo Exercício</a>
+                    </li>
                 </ul>
             </div>
-<div class="nd2-card">
-    <div data-role="header" style="background-color: #00ccb8">
-        <div class="card-title has-supporting-text" style="width: 85%">
-            <h4>Ex1</h4> 
-        </div> 
-        <a href="#showItemMenu-1" data-rel="popup" class="ui-btn ui-btn-right"><i class="zmdi zmdi-more-vert"></i></a>
-    </div> 
-    <div class="card-supporting-text has-action has-title">
-        <label>Equipamento:</label> lj<label>Séries:</label> lkj<label>Repetições:</label> lkj<label>Carga:</label> lkj  
-    </div> 
-</div> 
-<div data-role="popup" id="showItemMenu-1">
-    <ul data-role="listview" data-icon="false">
-        <li>
-            <a class="ui-btn" onclick="editItem(-1);">Editar Exercício</a>
-        </li>
-        <li>
-            <a class="ui-btn" onclick="if(confirm(`Apagar o exercício?`)) deleteItem(-1);">Remover Exercício</a>
-        </li>
-    </ul>
-</div> 
+            <div class="nd2-card">
+                <div data-role="header" style="background-color: #00ccb8">
+                    <div class="card-title has-supporting-text" style="width: 85%">
+                        <h4>Ex1</h4>
+                    </div>
+                    <a href="#showItemMenu-1" data-rel="popup" class="ui-btn ui-btn-right">
+                        <i class="zmdi zmdi-more-vert"></i>
+                    </a>
+                </div>
+                <div class="card-supporting-text has-action has-title">
+                    <label>Equipamento:</label>
+                    lj
+                    <label>Séries:</label>
+                    lkj
+                    <label>Repetições:</label>
+                    lkj
+                    <label>Carga:</label>
+                    lkj
+                </div>
+            </div>
+            <div data-role="popup" id="showItemMenu-1">
+                <ul data-role="listview" data-icon="false">
+                    <li>
+                        <a class="ui-btn" onclick="editItem(-1);">Editar Exercício</a>
+                    </li>
+                    <li>
+                        <a class="ui-btn" onclick="if(confirm(`Apagar o exercício?`)) deleteItem(-1);">Remover Exercício</a>
+                    </li>
+                </ul>
+            </div>
 
 
 
@@ -135,17 +161,23 @@ body {
 
     <div id="editRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a onclick="if(confirm('Cancelar a edição?')) backFunction();" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-close"></i></a>
+            <a onclick="if(confirm('Cancelar a edição?')) backFunction();" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button">
+                <i class="zmdi zmdi-close"></i>
+            </a>
             <h1>Editando Treino</h1>
-            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditRoutine').submit(); return false;"><i class="zmdi zmdi-check"></i></a>
+            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditRoutine').submit(); return false;">
+                <i class="zmdi zmdi-check"></i>
+            </a>
             <!--             <a class="ui-btn ui-mini waves-effect waves-button waves-effect waves-button btn-save" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a> -->
         </div>
         <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
             <form id="frmEditRoutine" action="">
                 <input type="hidden" id="routineId" />
                 <div data-role="content">
-                    <label for="inputName">Nome:</label> <input type="text" id="inputName" name="inputName" placeholder="Nome do Treino" /> <label for="inputObs">Observações:</label> <input
-                        type="text" id="inputObs" name="inputObs" placeholder="Observações sobre esse treino" />
+                    <label for="inputName">Nome:</label>
+                    <input type="text" id="inputName" name="inputName" placeholder="Nome do Treino" />
+                    <label for="inputObs">Observações:</label>
+                    <input type="text" id="inputObs" name="inputObs" placeholder="Observações sobre esse treino" />
                 </div>
             </form>
         </div>
@@ -160,32 +192,44 @@ body {
 
     <div id="editItemPage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button"><i class="zmdi zmdi-close"></i></a>
+            <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button">
+                <i class="zmdi zmdi-close"></i>
+            </a>
             <h1>Editando Exercício</h1>
-            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditItem').submit(); return false;"><i class="zmdi zmdi-check"></i></a>
+            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditItem').submit(); return false;">
+                <i class="zmdi zmdi-check"></i>
+            </a>
             <!--             <a class="ui-btn ui-mini waves-effect waves-button waves-effect waves-button btn-save" onclick="$('#frmEditItem').submit(); return false;">Salvar</a> -->
         </div>
         <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
             <form id="frmEditItem" action="">
-                <input type="hidden" id="itemId" /> <input type="hidden" id="inputSequence" />
+                <input type="hidden" id="itemId" />
+                <input type="hidden" id="inputSequence" />
                 <div data-role="content">
-                    <label for="inputExercise">Exercício:</label> <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
+                    <label for="inputExercise">Exercício:</label>
+                    <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
                     <!--                         <ul id="listViewExercise" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#inputExercise"></ul> -->
 
-                    <label for="inputEquipment">Equipamento:</label> <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" /> <label for="inputSeries">Séries:</label>
-                    <input type="text" id="inputSeries" name="inputSeries" placeholder="Número de Séries" /> <label for="inputReps">Repetições:</label> <input type="text" id="inputReps"
-                        name="inputReps" placeholder="Número de Repetições" /> <label for="inputWeight">Carga:</label> <input type="text" id="inputWeight" name="inputWeight" placeholder="Carga" /> <label
-                        for="slctIntercalate">Intercalado:</label> <select name="slctIntercalate" id="slctIntercalate" data-native-menu="false"></select>
+                    <label for="inputEquipment">Equipamento:</label>
+                    <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" />
+                    <label for="inputSeries">Séries:</label>
+                    <input type="text" id="inputSeries" name="inputSeries" placeholder="Número de Séries" />
+                    <label for="inputReps">Repetições:</label>
+                    <input type="text" id="inputReps" name="inputReps" placeholder="Número de Repetições" />
+                    <label for="inputWeight">Carga:</label>
+                    <input type="text" id="inputWeight" name="inputWeight" placeholder="Carga" />
+                    <label for="slctIntercalate">Intercalado:</label>
+                    <select name="slctIntercalate" id="slctIntercalate" data-native-menu="false"></select>
                 </div>
             </form>
         </div>
-<!--         <div data-role="footer" data-position="fixed"> -->
-<!--             <div data-role="navbar"> -->
-<!--                 <ul> -->
-<!--                     <li><a class="ui-btn ui-mini ui-corner-all" onclick="if(confirm('Apagar o exercício?')) deleteItem();">Apagar Exercício</a></li> -->
-<!--                 </ul> -->
-<!--             </div> -->
-<!--         </div> -->
+        <!--         <div data-role="footer" data-position="fixed"> -->
+        <!--             <div data-role="navbar"> -->
+        <!--                 <ul> -->
+        <!--                     <li><a class="ui-btn ui-mini ui-corner-all" onclick="if(confirm('Apagar o exercício?')) deleteItem();">Apagar Exercício</a></li> -->
+        <!--                 </ul> -->
+        <!--             </div> -->
+        <!--         </div> -->
     </div>
 
     <script src="cordova.js" type="text/javascript"></script>

@@ -1,0 +1,19 @@
+{
+    "name": "com.wim.workout-companion",
+    "version": "0.6",
+    "displayName": "workout-companion",
+    "cordova": {
+        "platforms": [
+            "browser"
+        ],
+        "plugins": {
+            "cordova-plugin-console": {},
+            "cordova-plugin-inappbrowser": {}
+        }
+    },
+    "dependencies": {
+        "cordova-browser": "~4.1.0",
+        "cordova-plugin-console": "~1.0.2",
+        "cordova-plugin-inappbrowser": "~1.3.0"
+    }
+}

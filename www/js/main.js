@@ -89,23 +89,23 @@ function fillRoutinesList() {
 
 function _itemToTextMenu(itemId){
     return ''+
-    `<div style="display: none;" id="itemMenu${itemId}-placeholder"></div>`+ 
-    `<div class="ui-screen-hidden ui-popup-screen ui-overlay-inherit" id="itemMenu${itemId}-screen"></div>`+ 
-    `<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="itemMenu${itemId}-popup">`+
-    `<div data-role="popup" id="itemMenu${itemId}" class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all">`+
-    `<ul data-role="listview" data-icon="false" class="ui-listview">`+
-    `<li class="ui-first-child">`+
-    `<a class="ui-btn waves-effect waves-button" onclick="editItem(${itemId});">Editar Exercício</a></a>`+
-    `</li>`+
-    `<li>`+
-    `<a class="ui-btn waves-effect waves-button" onclick="if(confirm('Apagar o exercício?')) deleteItem(${itemId});">Remover Exercício</a>`+
-    `</li>`+
-    `<li class="ui-last-child">`+
-    `<a class="ui-btn waves-effect waves-button" onclick="newItem();">Novo Exercício</a>`+
-    `</li>`+
-    `</ul>`+
-    `</div>`+
-    `</div>`;
+    '<div style="display: none;" id="itemMenu${itemId}-placeholder"></div>'+ 
+    '<div class="ui-screen-hidden ui-popup-screen ui-overlay-inherit" id="itemMenu${itemId}-screen"></div>'+ 
+    '<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="itemMenu${itemId}-popup">'+
+    '<div data-role="popup" id="itemMenu${itemId}" class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all">'+
+    '<ul data-role="listview" data-icon="false" class="ui-listview">'+
+    '<li class="ui-first-child">'+
+    '<a class="ui-btn waves-effect waves-button" onclick="editItem(${itemId});">Editar Exercício</a></a>'+
+    '</li>'+
+    '<li>'+
+    '<a class="ui-btn waves-effect waves-button" onclick="if(confirm(\'Apagar o exercício?\')) deleteItem(${itemId});">Remover Exercício</a>'+
+    '</li>'+
+    '<li class="ui-last-child">'+
+    '<a class="ui-btn waves-effect waves-button" onclick="newItem();">Novo Exercício</a>'+
+    '</li>'+
+    '</ul>'+
+    '</div>'+
+    '</div>'.replace('${itemId}',itemId);
 }
 
 function itemToText(item) {

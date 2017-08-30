@@ -9,7 +9,7 @@
 <!-- <link rel="stylesheet" href="css/cordova.css" /> -->
 <link rel="stylesheet" href="vendor/jquery/jquery.mobile.min.css" />
 <link rel="stylesheet" href="vendor/font-awesome/font-awesome.min.css" />
-<link rel="stylesheet" href="vendor/waves/waves.min.css" />
+<!-- <link rel="stylesheet" href="vendor/waves/waves.min.css" /> -->
 <!-- <link rel="stylesheet" href="vendor/wow/animate.css" /> -->
 <link rel="stylesheet" href="vendor/nativedroid2/css/nativedroid2.css" />
 <!-- <link rel="stylesheet" href="css/main.css" /> -->
@@ -43,11 +43,11 @@ body {
     <div id="mainPage" data-role="page">
         <div data-role="header" data-position="fixed">
             <h1>SimpliFit</h1>
-            <a href="#mainMenu" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'>
+            <a href="#mainMenu" data-rel="popup" class="ui-btn ui-btn-right">
                 <i class="zmdi zmdi-more-vert"></i>
             </a>
         </div>
-        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+        <div role="main" class="ui-content" data-inset="false">
             <ul id="listRoutines" data-role="listview" data-icon="false">
             </ul>
         </div>
@@ -71,17 +71,24 @@ body {
 
     <div id="showRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a href="#mainPage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button">
+            <a href="#mainPage" class="ui-btn ui-btn-inline">
                 <i class="zmdi zmdi-arrow-left"></i>
             </a>
             <h1 id="viewRoutineName"></h1>
-            <a href="#showRoutineMenu" data-rel="popup" class="ui-btn ui-btn-right wow fadeIn" data-wow-delay='1.2s'>
+            <a href="#showRoutineMenu" data-rel="popup" class="ui-btn ui-btn-right">
                 <i class="zmdi zmdi-more-vert"></i>
             </a>
             <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 72px; margin-right: 72px; font-weight: 400" id="viewRoutineObs"></p>
         </div>
-        <div id="showRoutineContent" role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+        <div id="showRoutineContent" role="main" class="ui-content" data-inset="false">
             <!--  -->
+        </div>
+        <div data-role="popup" id="showRoutineMenu">
+            <ul data-role="listview" data-icon="false">
+                <li><a class="ui-btn" onclick="editRoutine();">Editar Treino</a></li>
+                <li><a class="ui-btn" onclick="if(confirm('Remover o treino?')) deleteRoutine();">Remover Treino</a></li>
+                <li><a class="ui-btn" onclick="newItem();">Novo Exercício</a></li>
+            </ul>
         </div>
         <!--         <div data-role="footer" data-position="fixed"> -->
         <!--             <div data-role="navbar"> -->
@@ -96,16 +103,16 @@ body {
 
     <div id="editRoutinePage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a onclick="if(confirm('Cancelar a edição?')) backFunction();" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button">
+            <a onclick="if(confirm('Cancelar a edição?')) backFunction();" class="ui-btn ui-btn-inline">
                 <i class="zmdi zmdi-close"></i>
             </a>
             <h1>Editando Treino</h1>
-            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditRoutine').submit(); return false;">
+            <a href="#" class="ui-btn ui-btn-inline" onclick="$('#frmEditRoutine').submit(); return false;">
                 <i class="zmdi zmdi-check"></i>
             </a>
-            <!--             <a class="ui-btn ui-mini waves-effect waves-button waves-effect waves-button btn-save" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a> -->
+            <!--             <a class="ui-btn ui-mini btn-save" onclick="$('#frmEditRoutine').submit(); return false;">Salvar</a> -->
         </div>
-        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+        <div role="main" class="ui-content" data-inset="false">
             <form id="frmEditRoutine" action="">
                 <input type="hidden" id="routineId" />
                 <div data-role="content">
@@ -127,16 +134,16 @@ body {
 
     <div id="editItemPage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <a href="#showRoutinePage" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button">
+            <a href="#showRoutinePage" class="ui-btn ui-btn-inline">
                 <i class="zmdi zmdi-close"></i>
             </a>
             <h1>Editando Exercício</h1>
-            <a href="#" class="ui-btn ui-btn-inline waves-effect waves-button waves-effect waves-button" onclick="$('#frmEditItem').submit(); return false;">
+            <a href="#" class="ui-btn ui-btn-inline" onclick="$('#frmEditItem').submit(); return false;">
                 <i class="zmdi zmdi-check"></i>
             </a>
-            <!--             <a class="ui-btn ui-mini waves-effect waves-button waves-effect waves-button btn-save" onclick="$('#frmEditItem').submit(); return false;">Salvar</a> -->
+            <!--             <a class="ui-btn ui-mini btn-save" onclick="$('#frmEditItem').submit(); return false;">Salvar</a> -->
         </div>
-        <div role="main" class="ui-content wow fadeIn" data-inset="false" data-wow-delay="0.2s">
+        <div role="main" class="ui-content" data-inset="false">
             <form id="frmEditItem" action="">
                 <input type="hidden" id="itemId" />
                 <input type="hidden" id="inputSequence" />
@@ -172,7 +179,7 @@ body {
     <script src="vendor/jquery/jquery-ui.min.js" type="text/javascript"></script>
     <script src="vendor/jquery/jquery.mobile.min.js" type="text/javascript"></script>
     <script src="vendor/jquery/jquery.validate.min.js" type="text/javascript"></script>
-    <script src="vendor/waves/waves.min.js" type="text/javascript"></script>
+<!--     <script src="vendor/waves/waves.min.js" type="text/javascript"></script> -->
     <!--     <script src="vendor/wow/wow.min.js" type="text/javascript"></script> -->
     <script src="vendor/nativedroid2/js/nativedroid2.js" type="text/javascript"></script>
     <script src="vendor/nativedroid2/js/nd2settings.js" type="text/javascript"></script>

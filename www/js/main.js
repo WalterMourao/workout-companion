@@ -1,3 +1,13 @@
+String.prototype.replaceAll = function(de, para){
+    var str = this;
+    var pos = str.indexOf(de);
+    while (pos > -1){
+        str = str.replace(de, para);
+        pos = str.indexOf(de);
+    }
+    return (str);
+}
+
 var routines;
 var currentRoutine;
 var currentItem;
@@ -88,31 +98,24 @@ function fillRoutinesList() {
 }
 
 function _itemToTextMenu(itemId){
-    return ''+
-    '<div style="display: none;" id="itemMenu${itemId}-placeholder"></div>'+ 
-    '<div class="ui-screen-hidden ui-popup-screen ui-overlay-inherit" id="itemMenu${itemId}-screen"></div>'+ 
-    '<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="itemMenu${itemId}-popup">'+
-    '<div data-role="popup" id="itemMenu${itemId}" class="ui-popup ui-body-inherit ui-overlay-shadow ui-corner-all">'+
-    '<ul data-role="listview" data-icon="false" class="ui-listview">'+
-    '<li class="ui-first-child">'+
-    '<a class="ui-btn waves-effect waves-button" onclick="editItem(${itemId});">Editar Exercício</a></a>'+
-    '</li>'+
-    '<li>'+
-    '<a class="ui-btn waves-effect waves-button" onclick="if(confirm(\'Apagar o exercício?\')) deleteItem(${itemId});">Remover Exercício</a>'+
-    '</li>'+
-    '<li class="ui-last-child">'+
-    '<a class="ui-btn waves-effect waves-button" onclick="newItem();">Novo Exercício</a>'+
-    '</li>'+
+    var result=''+
+    '<div data-role="popup" id="itemMenu${itemId}">'+
+    '<ul data-role="listview" data-icon="false">'+
+    '<li><a class="ui-btn" onclick="editItem(${itemId});">Editar Exercício</a>'+
+    '<li><a class="ui-btn" onclick="if(confirm(\'Apagar o exercício?\')) deleteItem(${itemId});">Remover Exercício</a>'+
     '</ul>'+
-    '</div>'+
-    '</div>'.replace('${itemId}',itemId);
+    '</div>';
+    return result.replaceAll('${itemId}',itemId);
 }
 
 function itemToText(item) {
+    
+    var colors = ['Purple','SteelBlue'];
+    
     //montando o card
-    var text = '<div class="nd2-card"><div data-role="header" role="banner" class="ui-header ui-bar-inherit"><div class="card-title has-supporting-text" style="width: 85%; padding-top: 1px; padding-bottom: 1px;"><h4>';
+    var text = '<div class="nd2-card"><div data-role="header" role="banner" class="ui-header ui-bar-inherit" style="background-color: '+colors[item.sequence % 2]+'"><div class="card-title has-supporting-text" style="width: 85%; padding-top: 1px; padding-bottom: 1px;"><h4>';
     text += item.exercise;
-    text += '</h4></div><a href="#showItemMenu'+item.id+'" data-rel="popup" class="ui-btn-right wow fadeIn waves-effect waves-button ui-btn" data-wow-delay="1.2s" aria-haspopup="true" aria-owns="showRoutineMenuX" aria-expanded="false" data-role="button" role="button"><i class="zmdi zmdi-more-vert"></i></a></div>';
+    text += '</h4></div><a href="#itemMenu'+item.id+'" data-rel="popup" class="ui-btn-right ui-btn" data-wow-delay="1.2s" aria-haspopup="true" aria-owns="itemMenu'+item.id+'" aria-expanded="false" data-role="button" role="button"><i class="zmdi zmdi-more-vert"></i></a></div>';
     text += '<div class="card-supporting-text has-action has-title">';
     if (item.equipment) {
         text += '<label>Equipamento:</label>' + item.equipment;
@@ -142,22 +145,14 @@ function fillItemsList() {
 
     if (items.length == 0) {
         listItems.html('');
-        listItems.hide();
     } else {
-        var oldSequence = items[0].sequence
-
-        listItems.show();
         var html = '';
+        
         items.forEach(function(item) {
-
-//            if (item.sequence != oldSequence) {
-//                html += '<li data-role="list-divider"></li>';
-//                oldSequence = item.sequence;
-//            }
-
             html += itemToText(item);
         });
-        listItems.html(html);
+        
+        listItems.html(html).enhanceWithin();;
     }
     //listItems.listview('refresh'); // isso supre um bug do jqm
 }
@@ -329,7 +324,7 @@ function deleteRoutine() {
 
 function deleteItem(itemId) {
     currentRoutine.items.splice(indexOfId(currentRoutine.items, itemId), 1);
-    gotoShowRoutinePage();
+    showRoutine(currentRoutine.id);
 }
 
 // **********************

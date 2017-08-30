@@ -42,14 +42,12 @@ body {
 
     <div id="mainPage" data-role="page">
         <div data-role="header" data-position="fixed">
-            <h1>SimpliFit</h1>
+            <h1>SimpliFit - Treinos</h1>
             <a href="#mainMenu" data-rel="popup" class="ui-btn ui-btn-right">
                 <i class="zmdi zmdi-more-vert"></i>
             </a>
         </div>
-        <div role="main" class="ui-content" data-inset="false">
-            <ul id="listRoutines" data-role="listview" data-icon="false">
-            </ul>
+        <div id="listRoutines" role="main" class="ui-content" data-inset="false">
         </div>
 
         <!--         <div data-role="footer" data-position="fixed"> -->
@@ -78,7 +76,6 @@ body {
             <a href="#showRoutineMenu" data-rel="popup" class="ui-btn ui-btn-right">
                 <i class="zmdi zmdi-more-vert"></i>
             </a>
-            <p style="margin-top: 8px; margin-bottom: 8px; margin-left: 72px; margin-right: 72px; font-weight: 400" id="viewRoutineObs"></p>
         </div>
         <div id="showRoutineContent" role="main" class="ui-content" data-inset="false">
             <!--  -->
@@ -150,7 +147,7 @@ body {
                 <div data-role="content">
                     <label for="inputExercise">Exercício:</label>
                     <input type="text" id="inputExercise" name="inputExercise" placeholder="Descrição do Exercício" />
-                    <!--                         <ul id="listViewExercise" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#inputExercise"></ul> -->
+                    <ul id="listViewExercise" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#inputExercise"></ul>
 
                     <label for="inputEquipment">Equipamento:</label>
                     <input type="text" id="inputEquipment" name="inputEquipment" placeholder="Descrição do Equipamento" />

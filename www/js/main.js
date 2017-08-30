@@ -1,7 +1,7 @@
-String.prototype.replaceAll = function(de, para){
+String.prototype.replaceAll = function(de, para) {
     var str = this;
     var pos = str.indexOf(de);
-    while (pos > -1){
+    while (pos > -1) {
         str = str.replace(de, para);
         pos = str.indexOf(de);
     }
@@ -11,12 +11,12 @@ String.prototype.replaceAll = function(de, para){
 var routines;
 var currentRoutine;
 var currentItem;
-var currentPage='mainPage';
+var currentPage = 'mainPage';
 
 function initApp() {
     document.addEventListener("backbutton", onBackKeyDown, false);
 
-//    $("#listViewExercise").on("filterablebeforefilter", fillAutocompleteExercise);
+    $("#listViewExercise").on("filterablebeforefilter", fillAutocompleteExercise);
 
     routines = JSON.parse(window.localStorage.getItem('routines'));
     if (routines == null) {
@@ -79,60 +79,68 @@ function fillRoutinesList() {
     listRoutines.children().remove();
 
     if (routines.length == 0) {
-        listRoutines.append($('<li>Não há treinos</li>'));
+        listRoutines.append($('<p>Nenhum treino foi criado.</p>'));
     } else {
         routines.sort(function(a, b) {
             return a.name.localeCompare(b.name);
         });
-        
+
         var html = '';
         routines.forEach(function(routine) {
-            var text = '<h2>' + routine.name + '</h2><p>'+routine.obs+'</p>';
-            text = '<li class="ui-li-static ui-body-inherit"><a onclick="showRoutine(' + routine.id + ')">' + text + '</a></li>';
-//            text += '<a onclick="editRoutine(' + routine.id + ')" data-icon="gear">Editar</a></li>'
+            var text = '<div class="nd2-card" onclick="showRoutine(' + routine.id + ')">';
+            text += '<div class="card-title"><h3 class="card-primary-title">' + routine.name + '</h3></div>';
+            if(routine.obs){
+                text += '<div class="card-supporting-text">'+routine.obs+'</div>';
+            }
+            text += '</div>';
+            
             html += text;
         });
         listRoutines.html(html);
     }
-    listRoutines.listview('refresh'); // isso supre um bug do jqm
 }
 
-function _itemToTextMenu(itemId){
-    var result=''+
-    '<div data-role="popup" id="itemMenu${itemId}">'+
-    '<ul data-role="listview" data-icon="false">'+
-    '<li><a class="ui-btn" onclick="editItem(${itemId});">Editar Exercício</a>'+
-    '<li><a class="ui-btn" onclick="if(confirm(\'Apagar o exercício?\')) deleteItem(${itemId});">Remover Exercício</a>'+
-    '</ul>'+
-    '</div>';
-    return result.replaceAll('${itemId}',itemId);
+function _itemToTextMenu(itemId) {
+    var result = ''
+            + '<div data-role="popup" id="itemMenu${itemId}">'
+            + '<ul data-role="listview" data-icon="false">'
+            + '<li><a class="ui-btn" onclick="editItem(${itemId});">Editar Exercício</a>'
+            + '<li><a class="ui-btn" onclick="if(confirm(\'Apagar o exercício?\')) deleteItem(${itemId});">Remover Exercício</a>'
+            + '</ul>' + '</div>';
+    return result.replaceAll('${itemId}', itemId);
 }
 
 function itemToText(item) {
-    
-    var colors = ['Purple','SteelBlue'];
-    
-    //montando o card
-    var text = '<div class="nd2-card"><div data-role="header" role="banner" class="ui-header ui-bar-inherit" style="background-color: '+colors[item.sequence % 2]+'"><div class="card-title has-supporting-text" style="width: 85%; padding-top: 1px; padding-bottom: 1px;"><h4>';
+
+    var colors = [ 'Purple', 'SteelBlue' ];
+
+    // montando o card
+    var text = '<div class="nd2-card"><div data-role="header" role="banner" class="ui-header ui-bar-inherit" style="background-color: '
+            + colors[item.sequence % 2]
+            + '"><div class="card-title has-supporting-text" style="width: 85%; padding-top: 1px; padding-bottom: 1px;"><h4>';
     text += item.exercise;
-    text += '</h4></div><a href="#itemMenu'+item.id+'" data-rel="popup" class="ui-btn-right ui-btn" data-wow-delay="1.2s" aria-haspopup="true" aria-owns="itemMenu'+item.id+'" aria-expanded="false" data-role="button" role="button"><i class="zmdi zmdi-more-vert"></i></a></div>';
+    text += '</h4></div><a href="#itemMenu'
+            + item.id
+            + '" data-rel="popup" class="ui-btn-right ui-btn" data-wow-delay="1.2s" aria-haspopup="true" aria-owns="itemMenu'
+            + item.id
+            + '" aria-expanded="false" data-role="button" role="button"><i class="zmdi zmdi-more-vert"></i></a></div>';
     text += '<div class="card-supporting-text has-action has-title">';
     if (item.equipment) {
         text += '<label>Equipamento:</label>' + item.equipment;
     }
-    if (item.series){
-        text += '<label>Séries:</label>'+item.series;
+    if (item.series) {
+        text += '<label>Séries:</label>' + item.series;
     }
-    if (item.reps){
-        text += '<label>Repetições:</label>'+item.reps;
+    if (item.reps) {
+        text += '<label>Repetições:</label>' + item.reps;
     }
     if (item.weight) {
-        text += '<label>Carga:</label>'+item.weight;
+        text += '<label>Carga:</label>' + item.weight;
     }
     text += '</div></div>';
-    //montando o menu do card
+    // montando o menu do card
     text += _itemToTextMenu(item.id);
-    
+
     return text;
 }
 
@@ -147,14 +155,15 @@ function fillItemsList() {
         listItems.html('');
     } else {
         var html = '';
-        
+
         items.forEach(function(item) {
             html += itemToText(item);
         });
-        
-        listItems.html(html).enhanceWithin();;
+
+        listItems.html(html).enhanceWithin();
+        ;
     }
-    //listItems.listview('refresh'); // isso supre um bug do jqm
+    // listItems.listview('refresh'); // isso supre um bug do jqm
 }
 
 function toTitleCase(str) {
@@ -172,7 +181,6 @@ function showRoutine(id) {
     currentRoutine = findRoutine(id);
 
     $('#viewRoutineName').html(currentRoutine.name);
-    $('#viewRoutineObs').html(currentRoutine.obs);
     if (currentRoutine.obs == '') {
         $('#viewRoutineObs').hide();
     } else {
@@ -193,7 +201,7 @@ function newRoutine() {
 }
 
 function editRoutine(_backFunction) {
-    if(_backFunction){
+    if (_backFunction) {
         backFunction = _backFunction;
     } else {
         backFunction = gotoShowRoutinePage;
@@ -230,17 +238,22 @@ function nextSequence() {
     return (items.length == 0) ? 1 : parseInt(items[items.length - 1].sequence) + 1;
 }
 
-function fillIntercalate(ignoreId) {
+function fillIntercalate(currentItem) {
     var slctIntercalate = $('#slctIntercalate');
+    var currentValue = 0;
 
     slctIntercalate.empty();
     slctIntercalate.append($('<option />').val(0).text('Não intercalado'));
     currentRoutine.items.forEach(function(element) {
-        if (element.id != ignoreId) {
+        if (element.id != currentItem.id) {
+            if (element.sequence == currentItem.sequence) {
+                currentValue = element.id;
+            }
+
             slctIntercalate.append($('<option />').val(element.id).text(element.exercise));
         }
     });
-    slctIntercalate.val(0);
+    slctIntercalate.val(currentValue);
     slctIntercalate.selectmenu().selectmenu('refresh');
 }
 
@@ -260,7 +273,7 @@ function doEditItem(item) {
     $('#inputWeight').val(item.weight);
     $('#inputSequence').val(item.sequence);
     gotoEditItemPage();
-    fillIntercalate(item.id);
+    fillIntercalate(item);
 }
 
 function newItem() {
@@ -329,14 +342,14 @@ function deleteItem(itemId) {
 
 // **********************
 
-function setValueAutocompleteExercise(value){
+function setValueAutocompleteExercise(value) {
     $('#inputExercise').val(value);
     var listView = $('#listViewExercise');
     listView.html('');
     listView.listview('refresh');
 }
 
-var QUERY_PREFIX = 'exercício '; 
+var QUERY_PREFIX = 'exercício ';
 
 function fillAutocompleteExercise(event, data) {
     var listView = $(this);
@@ -356,16 +369,17 @@ function fillAutocompleteExercise(event, data) {
                 'Accept' : 'application/json'
             },
             data : {
-                q : QUERY_PREFIX+searchText
+                q : QUERY_PREFIX + searchText
             },
-            success: function(data) {
+            success : function(data) {
                 // Api returns [ Original Keyword, Searches[] ]
                 var results = data[1];
                 var html = '';
                 results.forEach(function(result) {
-                    if(result.indexOf(QUERY_PREFIX) == 0){
+                    if (result.indexOf(QUERY_PREFIX) == 0) {
                         var resultValue = toTitleCase(result.substring(QUERY_PREFIX.length));
-                        html += '<li><a onclick="setValueAutocompleteExercise(`'+resultValue+'`)">' + resultValue + '</a></li>';
+                        html += '<li><a onclick="setValueAutocompleteExercise(`' + resultValue + '`)">' + resultValue
+                                + '</a></li>';
                     }
                 });
 
@@ -373,47 +387,25 @@ function fillAutocompleteExercise(event, data) {
                 listView.listview('refresh');
                 listView.trigger('updatelayout');
             },
-            error: function(jqXHR, textStatus, errorThrown ) {
-                //Não conectado?
-            } 
+            error : function(jqXHR, textStatus, errorThrown) {
+                // Não conectado?
+            }
         });
     }
 }
-/*********************
-scope.search = function() {
-  // If searchText empty, don't search
-  if (scope.searchText == null || scope.searchText.length < 1)
-    return;
-
-  var url = 'http://suggestqueries.google.com/complete/search?';
-  url += 'callback=JSON_CALLBACK&client=firefox&hl=en&q=' 
-  url += encodeURIComponent(scope.searchText);
-  $http.defaults.useXDomain = true;
-
-  $http({
-    url: url,
-    method: 'JSONP',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-
-    }
-  }).
-  success(function(data, status, headers, config) {
-
-    // Api returns [ Original Keyword, Searches[] ]
-    var results = data[1];
-    if (results.indexOf(scope.searchText) === -1) {
-      data.unshift(scope.searchText);
-    }
-    scope.suggestions = results;
-    scope.selectedIndex = -1;
-  }).
-  error(function(data, status, headers, config) {
-    console.log('fail');
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-  });
-******************/
+/***********************************************************************************************************************
+ * scope.search = function() { // If searchText empty, don't search if (scope.searchText == null ||
+ * scope.searchText.length < 1) return;
+ * 
+ * var url = 'http://suggestqueries.google.com/complete/search?'; url +=
+ * 'callback=JSON_CALLBACK&client=firefox&hl=en&q=' url += encodeURIComponent(scope.searchText);
+ * $http.defaults.useXDomain = true;
+ * 
+ * $http({ url: url, method: 'JSONP', headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods':
+ * 'POST, GET, OPTIONS, PUT', 'Content-Type': 'application/json', 'Accept': 'application/json'
+ *  } }). success(function(data, status, headers, config) {
+ *  // Api returns [ Original Keyword, Searches[] ] var results = data[1]; if (results.indexOf(scope.searchText) === -1) {
+ * data.unshift(scope.searchText); } scope.suggestions = results; scope.selectedIndex = -1; }). error(function(data,
+ * status, headers, config) { console.log('fail'); // called asynchronously if an error occurs // or server returns
+ * response with an error status. });
+ **********************************************************************************************************************/

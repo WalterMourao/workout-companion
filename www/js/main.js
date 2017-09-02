@@ -326,6 +326,8 @@ function saveItem() {
     currentRoutine.items.sort(function(a, b) {
         return a.sequence - b.sequence
     });
+    
+    doSaveRoutines();
 
     showRoutine(currentRoutine.id);
 }

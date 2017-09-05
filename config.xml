@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.wim.workout-companion" version="0.9" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>workout-companion</name>
+<widget id="com.wim.simplifit" version="0.9" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>SimpliFit</name>
     <description>
-        Workout Companion App.
+        SimpliFit App.
     </description>
     <author email="walter.mourao@gmail.com">
         Walter Mourão

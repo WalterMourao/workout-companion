@@ -1,7 +1,7 @@
 {
-    "name": "com.wim.workout-companion",
+    "name": "com.wim.simplifit",
     "version": "0.6",
-    "displayName": "workout-companion",
+    "displayName": "SimpliFit",
     "cordova": {
         "platforms": [
             "browser"

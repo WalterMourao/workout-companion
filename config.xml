@@ -9,7 +9,6 @@
     </author>
     <content src="index.html" />
     <icon src="icon.png" />
-<!--     <splash src="splash.png" /> -->
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />
     <platform name="android">

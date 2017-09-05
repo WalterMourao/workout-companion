@@ -230,7 +230,7 @@ function saveRoutine() {
 
     doSaveRoutines();
 
-    gotoShowRoutinePage();
+    gotoMainPage();
 }
 
 function nextSequence() {

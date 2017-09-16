@@ -352,6 +352,7 @@ function setValueAutocompleteExercise(value) {
 var QUERY_PREFIX = 'exercício físico ';
 
 function fillAutocompleteExercise(event, data) {
+    /*
     var listView = $(this);
     var searchText = $(data.input).val();
 
@@ -392,6 +393,7 @@ function fillAutocompleteExercise(event, data) {
             }
         });
     }
+    */
 }
 /***********************************************************************************************************************
  * scope.search = function() { // If searchText empty, don't search if (scope.searchText == null ||

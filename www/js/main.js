@@ -161,9 +161,7 @@ function fillItemsList() {
         });
 
         listItems.html(html).enhanceWithin();
-        ;
     }
-    // listItems.listview('refresh'); // isso supre um bug do jqm
 }
 
 function toTitleCase(str) {

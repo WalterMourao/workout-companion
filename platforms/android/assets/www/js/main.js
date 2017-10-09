@@ -13,6 +13,12 @@ var currentRoutine;
 var currentItem;
 var currentPage = 'mainPage';
 
+function initializeNonExistent(record, field){
+    if(!record.hasOwnProperty(field)){
+        record[field] = '';
+    }
+}
+
 function initApp() {
     document.addEventListener("backbutton", onBackKeyDown, false);
 
@@ -21,6 +27,12 @@ function initApp() {
     routines = JSON.parse(window.localStorage.getItem('routines'));
     if (routines == null) {
         routines = [];
+    } else {
+        //inicializand novos campos que não existiam em versões anteriores
+        routines.forEach(function(routine) {
+            initializeNonExistent(routine,'startDate');
+            initializeNonExistent(routine,'endDate');
+        });
     }
 
     fillRoutinesList();
@@ -88,11 +100,25 @@ function fillRoutinesList() {
         var html = '';
         routines.forEach(function(routine) {
             var text = '<div class="nd2-card" onclick="showRoutine(' + routine.id + ')">';
-            text += '<div class="card-title"><h3 class="card-primary-title">' + routine.name + '</h3></div>';
-            if(routine.obs){
-                text += '<div class="card-supporting-text">'+routine.obs+'</div>';
+            text += '<div class="card-title"><h3 class="card-primary-title">' + routine.name + '</h3>';
+            if(routine.obs || routine.startDate || routine.endDate){
+                text += '<h5 class="card-subtitle"><p>'+routine.obs+'</p>';
+                if(routine.startDate || routine.endDate){
+                    text += '<p>Treinar';
+                    if(routine.startDate){
+                        if(!routine.endDate){
+                            text += ' a partir';
+                        }
+                        text += ' de '+ routine.startDate;
+                    }
+                    if(routine.endDate){
+                        text += ' até '+routine.endDate;
+                    }
+                    text += '</p>';
+                }
+                text += '</h5>';
             }
-            text += '</div>';
+            text += '</div></div>';
             
             html += text;
         });
@@ -193,6 +219,9 @@ function newRoutine() {
         id : 0,
         name : '',
         obs : '',
+        startDate : '',
+        endDate : '',
+        
         items : []
     };
     editRoutine(gotoMainPage);
@@ -208,6 +237,8 @@ function editRoutine(_backFunction) {
     $('#routineId').val(currentRoutine.id);
     $('#inputName').val(currentRoutine.name);
     $('#inputObs').val(currentRoutine.obs);
+    $('#startDate').val(currentRoutine.startDate);
+    $('#endDate').val(currentRoutine.endDate);
 
     $.mobile.changePage('#editRoutinePage');
 }
@@ -220,6 +251,8 @@ function saveRoutine() {
     currentRoutine.id = $('#routineId').val();
     currentRoutine.name = toTitleCase($('#inputName').val().trim());
     currentRoutine.obs = $('#inputObs').val().trim();
+    currentRoutine.startDate = $('#inputStartDate').val();
+    currentRoutine.endDate = $('#inputEndDate').val();
 
     if (currentRoutine.id == 0) {// novo treino
         currentRoutine.id = (0 - routines.length) - 1;
